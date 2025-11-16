@@ -10,7 +10,6 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Rsvp from './pages/Rsvp';
 import Gifts from './pages/Gifts';
-import Kitchen from './pages/Kitchen';
 import Honeymoon from './pages/ConvidateTips';
 import Vip from './pages/Vip';
 
@@ -30,7 +29,6 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/rsvp" element={<Rsvp />} />
           <Route path="/gifts" element={<Gifts />} />
-          <Route path="/kitchen" element={<Kitchen />} />
           <Route path="/convidate-tips" element={<Honeymoon />} />
           <Route path="/vip" element={<Vip />} />
           <Route path="*" element={<Navigate to="/" replace />} />
