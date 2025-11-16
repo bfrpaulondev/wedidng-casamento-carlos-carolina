@@ -8,6 +8,7 @@ const API_URL =
   process.env.REACT_APP_API_URL ||
   'https://wedding-6pnopfkyu-bfrpaulondevs-projects.vercel.app/api';
 
+
 export const WEDDING_DATE = new Date('2026-05-24T15:30:00+01:00');
 
 export const DAILY_PHRASES = [
@@ -391,3 +392,4 @@ export const AppProvider = ({ children }) => {
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
+
