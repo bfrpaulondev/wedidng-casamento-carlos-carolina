@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Box, Typography, Button, Grid, IconButton } from '@mui/material';
+import { Box, Typography, Button, Grid } from '@mui/material';
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
 import confetti from 'canvas-confetti';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 const WEDDING_DATE = new Date('2026-06-21T15:00:00');
 

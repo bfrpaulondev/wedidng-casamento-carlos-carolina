@@ -55,13 +55,13 @@ export default function Rsvp() {
 
   useEffect(() => {
     refreshMyRsvpFromStorage();
-  }, []);
+  }, [refreshMyRsvpFromStorage]);
 
   useEffect(() => {
     if (isAdmin) {
       fetchAdminRsvps();
     }
-  }, [isAdmin]);
+  }, [isAdmin, fetchAdminRsvps]);
 
   const handleNewRsvp = async (data) => {
     const created = await addRsvp(data);
@@ -79,7 +79,7 @@ export default function Rsvp() {
         spread: 70,
         origin: { y: 0.6 },
       });
-    } catch {}
+    } catch { }
 
     return created;
   };
@@ -93,8 +93,8 @@ export default function Rsvp() {
         status === 'APPROVED'
           ? 'Presença aprovada.'
           : status === 'REJECTED'
-          ? 'Pedido marcado como não aprovado.'
-          : 'Status atualizado.',
+            ? 'Pedido marcado como não aprovado.'
+            : 'Status atualizado.',
       severity: 'info',
     });
   };
@@ -418,9 +418,8 @@ function RsvpForm({ onSubmit, isAdmin }) {
         sx={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: `radial-gradient(circle at 0 0, ${
-            theme.palette.custom?.brand100 || theme.palette.grey[100]
-          }, transparent 55%)`,
+          backgroundImage: `radial-gradient(circle at 0 0, ${theme.palette.custom?.brand100 || theme.palette.grey[100]
+            }, transparent 55%)`,
           opacity: 0.7,
           pointerEvents: 'none',
         }}
@@ -575,8 +574,8 @@ function RsvpStatusCard({ myRsvp }) {
     status === 'APPROVED'
       ? `${theme.palette.success.light}26`
       : status === 'REJECTED'
-      ? `${theme.palette.error.light}24`
-      : `${theme.palette.warning.light}24`;
+        ? `${theme.palette.error.light}24`
+        : `${theme.palette.warning.light}24`;
 
   const icon =
     status === 'APPROVED' ? (
@@ -591,8 +590,8 @@ function RsvpStatusCard({ myRsvp }) {
     status === 'APPROVED'
       ? 'Presença aprovada'
       : status === 'REJECTED'
-      ? 'Pedido não aprovado'
-      : 'Pedido pendente';
+        ? 'Pedido não aprovado'
+        : 'Pedido pendente';
 
   return (
     <MotionBox

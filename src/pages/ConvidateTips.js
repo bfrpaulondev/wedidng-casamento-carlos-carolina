@@ -294,7 +294,6 @@ export default function GuestTips() {
 }
 
 function IconBadge({ icon, index, blue, salmon }) {
-  const theme = useTheme();
 
   const bg =
     index % 2 === 0

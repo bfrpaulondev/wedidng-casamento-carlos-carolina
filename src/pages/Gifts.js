@@ -517,9 +517,8 @@ export default function Gifts() {
   );
 }
 
-// Campo com label, valor e botão de copiar
 function FieldRow({ label, value, copied, onCopy }) {
-  const theme = useTheme();
+
   return (
     <Box
       sx={{
