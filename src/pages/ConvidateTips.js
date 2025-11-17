@@ -342,7 +342,7 @@ function IconBadge({ icon, index, blue, salmon }) {
         alignItems: 'center',
         justifyContent: 'center',
         background: bg,
-        boxShadow: '0 8px 18px rgba(15,23,42,0.16)`,
+        boxShadow: '0 8px 18px rgba(15,23,42,0.16)'
       }}
     >
       <motion.span
@@ -405,7 +405,7 @@ function PetalCluster({ index, blue, salmon }) {
             borderRadius: '999px',
             background: p.color,
             opacity: 0.35,
-            transform: 'rotate(35deg)`,
+            transform: 'rotate(35deg)',
           }}
         />
       ))}
