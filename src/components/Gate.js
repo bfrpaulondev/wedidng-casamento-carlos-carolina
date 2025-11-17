@@ -21,6 +21,7 @@ export default function Gate() {
   const { login, user } = useContext(AppContext);
 
   const [open, setOpen] = useState(!user);
+  const [mode, setMode] = useState('login'); // 'login' | 'register'
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -34,10 +35,15 @@ export default function Gate() {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Nome é obrigatório';
+
     if (!formData.email.trim()) newErrors.email = 'Email é obrigatório';
-    if (!formData.phone.trim()) newErrors.phone = 'Telemóvel é obrigatório';
     if (!formData.pass.trim()) newErrors.pass = 'Senha é obrigatória';
+
+    if (mode === 'register') {
+      if (!formData.name.trim()) newErrors.name = 'Nome é obrigatório';
+      if (!formData.phone.trim()) newErrors.phone = 'Telemóvel é obrigatório';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -56,7 +62,8 @@ export default function Gate() {
     setGlobalError('');
 
     try {
-      await login(formData);
+      // o backend decide se faz login ou cadastro com base nos dados/mode
+      await login({ ...formData, mode });
       setOpen(false);
     } catch (err) {
       setGlobalError(err.message || 'Falha ao autenticar');
@@ -98,25 +105,77 @@ export default function Gate() {
           variant="body2"
           sx={{
             textAlign: 'center',
-            mb: 3,
+            mb: 2,
             color: theme.palette.text.secondary,
           }}
         >
-          Preenche os dados para entrar no site do casamento.
+          {mode === 'login'
+            ? 'Entra com o teu email e senha para aceder ao site do casamento.'
+            : 'Preenche os dados para te registares e entrar no site do casamento.'}
         </Typography>
 
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <TextField
-            label="Nome"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            error={!!errors.name}
-            helperText={errors.name}
-            fullWidth
-            margin="dense"
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 1,
+            mb: 2,
+          }}
+        >
+          <Button
             size="small"
-          />
+            variant={mode === 'login' ? 'contained' : 'text'}
+            onClick={() => {
+              setMode('login');
+              setGlobalError('');
+              setErrors({});
+            }}
+            sx={{ textTransform: 'none', borderRadius: '999px' }}
+          >
+            Já tenho acesso
+          </Button>
+          <Button
+            size="small"
+            variant={mode === 'register' ? 'contained' : 'text'}
+            onClick={() => {
+              setMode('register');
+              setGlobalError('');
+              setErrors({});
+            }}
+            sx={{ textTransform: 'none', borderRadius: '999px' }}
+          >
+            Primeiro acesso
+          </Button>
+        </Box>
+
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          {mode === 'register' && (
+            <>
+              <TextField
+                label="Nome"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                error={!!errors.name}
+                helperText={errors.name}
+                fullWidth
+                margin="dense"
+                size="small"
+              />
+
+              <TextField
+                label="Telemóvel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                error={!!errors.phone}
+                helperText={errors.phone}
+                fullWidth
+                margin="dense"
+                size="small"
+              />
+            </>
+          )}
 
           <TextField
             label="Email"
@@ -126,18 +185,6 @@ export default function Gate() {
             onChange={handleChange}
             error={!!errors.email}
             helperText={errors.email}
-            fullWidth
-            margin="dense"
-            size="small"
-          />
-
-          <TextField
-            label="Telemóvel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            error={!!errors.phone}
-            helperText={errors.phone}
             fullWidth
             margin="dense"
             size="small"
@@ -191,7 +238,7 @@ export default function Gate() {
               }}
               variant="contained"
             >
-              Entrar
+              {mode === 'login' ? 'Entrar' : 'Registar e entrar'}
             </Button>
             {loading && (
               <LinearProgress
