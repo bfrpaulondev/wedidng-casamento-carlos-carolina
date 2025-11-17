@@ -56,7 +56,6 @@ export default function Navbar() {
             border: `1px solid ${theme.palette.custom.brand200}`,
             width: 36,
             height: 36,
-
             backgroundColor: theme.palette.custom.brand50,
             '&:hover': { backgroundColor: theme.palette.custom.brand100 },
           }}
@@ -94,6 +93,7 @@ export default function Navbar() {
                         link.label
                       )
                     }
+                    sx={{ textAlign: 'center' }}
                   />
                 </ListItem>
               </Tooltip>
@@ -110,14 +110,14 @@ export default function Navbar() {
                 '&.active .MuiListItemText-primary': { fontWeight: 600 },
               }}
             >
-              <ListItemText primary={link.label} />
+              <ListItemText primary={link.label} sx={{ textAlign: 'center' }} />
             </ListItem>
           );
         })}
       </List>
 
       {user && (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25, alignItems: 'center' }}>
           <Button
             variant="outlined"
             onClick={handleEnterAdmin}
@@ -320,7 +320,6 @@ export default function Navbar() {
         PaperProps={{
           sx: {
             width: '100%',
-            maxWidth: '95%',
             backgroundImage: `linear-gradient(
               180deg,
               ${theme.palette.custom.brand50},
