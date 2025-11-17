@@ -20,12 +20,11 @@ import { AppContext } from '../contexts/AppContext';
 
 export default function Navbar() {
   const theme = useTheme();
-  const { user, logout,enterAdmin } = useContext(AppContext);
+  const { user, logout, enterAdmin } = useContext(AppContext);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const toggleDrawer = (open) => () => setDrawerOpen(open);
-
 
   const handleEnterAdmin = () => {
     const code = prompt('Código Admin');
@@ -48,57 +47,58 @@ export default function Navbar() {
       onKeyDown={toggleDrawer(false)}
     >
       <List sx={{ mb: 2 }}>
-        {navLinks.map(
-         (link) =>
-  !link.hidden && (
-    link.label === 'VIP Fotos' ? (
-      <Tooltip
-        key={link.label}
-        title="Disponível apenas no dia do casamento para os convidados postarem fotos e compartilharem vídeos entre si."
-      >
-        <ListItem
-          sx={{
-            color: theme.palette.text.disabled,
-            cursor: 'not-allowed',
-          }}
-        >
-          <ListItemText
-            primary={
-              isMobile
-                ? (
-                    <span>
-                      {link.label}{' '}
-                      <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>
-                        (disponível apenas no dia do casamento)
-                      </span>
-                    </span>
-                  )
-                : link.label
-            }
-          />
-        </ListItem>
-      </Tooltip>
-    ) : null
-  ) : (
+        {navLinks.map((link) => {
+          if (link.hidden) return null;
+
+          if (link.label === 'VIP Fotos') {
+            return (
+              <Tooltip
+                key={link.label}
+                title="Disponível apenas no dia do casamento para os convidados postarem fotos e compartilharem vídeos entre si."
+              >
                 <ListItem
-                  key={link.label}
-                  component={NavLink}
-                  to={link.to}
                   sx={{
-                    color: theme.palette.text.primary,
-                    '&.active .MuiListItemText-primary': { fontWeight: 600 },
+                    color: theme.palette.text.disabled,
+                    cursor: 'not-allowed',
                   }}
                 >
-                  <ListItemText primary={link.label} />
+                  <ListItemText
+                    primary={
+                      isMobile ? (
+                        <span>
+                          {link.label}{' '}
+                          <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>
+                            (disponível apenas no dia do casamento)
+                          </span>
+                        </span>
+                      ) : (
+                        link.label
+                      )
+                    }
+                  />
                 </ListItem>
-              )
-            ),
-        )}
+              </Tooltip>
+            );
+          }
+
+          return (
+            <ListItem
+              key={link.label}
+              component={NavLink}
+              to={link.to}
+              sx={{
+                color: theme.palette.text.primary,
+                '&.active .MuiListItemText-primary': { fontWeight: 600 },
+              }}
+            >
+              <ListItemText primary={link.label} />
+            </ListItem>
+          );
+        })}
       </List>
 
       {user && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25 }}>
-         
           <Button
             variant="outlined"
             onClick={handleEnterAdmin}
@@ -175,55 +175,66 @@ export default function Navbar() {
           </Typography>
 
           {!isMobile && (
-            <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', gap: 4, ml: 4 }}>
-              {navLinks.map(
-                (link) =>
-                  !link.hidden && (
-                    link.label === 'VIP Fotos' ? (
-                      <Tooltip
-                        key={link.label}
-                        title="Disponível apenas no dia do casamento para os convidados postarem fotos e compartilharem vídeos entre si."
-                      >
-                        <Typography
-                          sx={{
-                            color: theme.palette.text.disabled,
-                            textDecoration: 'none',
-                            fontSize: '0.875rem',
-                            cursor: 'not-allowed',
-                          }}
-                        >
-                          {link.label}
-                        </Typography>
-                      </Tooltip>
-                    ) : (
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: 'flex',
+                justifyContent: 'center',
+                gap: 4,
+                ml: 4,
+              }}
+            >
+              {navLinks.map((link) => {
+                if (link.hidden) return null;
+
+                if (link.label === 'VIP Fotos') {
+                  return (
+                    <Tooltip
+                      key={link.label}
+                      title="Disponível apenas no dia do casamento para os convidados postarem fotos e compartilharem vídeos entre si."
+                    >
                       <Typography
-                        key={link.label}
-                        component={NavLink}
-                        to={link.to}
                         sx={{
-                          color: theme.palette.text.primary,
+                          color: theme.palette.text.disabled,
                           textDecoration: 'none',
                           fontSize: '0.875rem',
-                          position: 'relative',
-                          '&:after': {
-                            content: '""',
-                            position: 'absolute',
-                            width: 0,
-                            height: '2px',
-                            bottom: -4,
-                            left: 0,
-                            backgroundColor: theme.palette.custom.brand600,
-                            transition: 'width 0.28s ease',
-                          },
-                          '&:hover:after': { width: '100%' },
-                          '&.active': { fontWeight: 'bold' },
+                          cursor: 'not-allowed',
                         }}
                       >
                         {link.label}
                       </Typography>
-                    )
-                  ),
-              )}
+                    </Tooltip>
+                  );
+                }
+
+                return (
+                  <Typography
+                    key={link.label}
+                    component={NavLink}
+                    to={link.to}
+                    sx={{
+                      color: theme.palette.text.primary,
+                      textDecoration: 'none',
+                      fontSize: '0.875rem',
+                      position: 'relative',
+                      '&:after': {
+                        content: '""',
+                        position: 'absolute',
+                        width: 0,
+                        height: '2px',
+                        bottom: -4,
+                        left: 0,
+                        backgroundColor: theme.palette.custom.brand600,
+                        transition: 'width 0.28s ease',
+                      },
+                      '&:hover:after': { width: '100%' },
+                      '&.active': { fontWeight: 'bold' },
+                    }}
+                  >
+                    {link.label}
+                  </Typography>
+                );
+              })}
             </Box>
           )}
 
@@ -286,17 +297,17 @@ export default function Navbar() {
       <Drawer
         anchor="right"
         open={drawerOpen}
-        onClose={toggleDrawer(true)}
+        onClose={toggleDrawer(false)}
         PaperProps={{
           sx: {
             width: '100%',
             maxWidth: '95%',
             backgroundImage: `linear-gradient(
-            180deg,
-            ${theme.palette.custom.brand50},
-            ${theme.palette.custom.brand100},
-            ${theme.palette.custom.brand200}
-          )`,
+              180deg,
+              ${theme.palette.custom.brand50},
+              ${theme.palette.custom.brand100},
+              ${theme.palette.custom.brand200}
+            )`,
             boxShadow: theme.shadows[10],
           },
         }}
@@ -305,5 +316,4 @@ export default function Navbar() {
       </Drawer>
     </>
   );
-
 }
