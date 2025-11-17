@@ -55,7 +55,6 @@ export default function Navbar() {
             borderRadius: '999px',
             border: `1px solid ${theme.palette.custom.brand200}`,
             width: 36,
-            marginRight:20,
             height: 36,
 
             backgroundColor: theme.palette.custom.brand50,
