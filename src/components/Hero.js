@@ -32,7 +32,6 @@ export default function Hero() {
     });
   }, [theme]);
 
-
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     mouseX.set(e.clientX - rect.left);
@@ -89,17 +88,50 @@ export default function Hero() {
       />
 
       <motion.div style={{ x: springX, y: springY, scale }} className="absolute inset-0" />
-      <Box sx={{ position: 'relative', textAlign: 'center', px: 4, maxWidth: '800px', color: 'white' }}>
-        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, ease: 'easeOut' }}>
-          <Typography variant="h6" sx={{ textTransform: 'uppercase', letterSpacing: 2, fontWeight: 600, mb: 2 }}>
+
+      {/* caixa com fundo preto transparente para destacar o texto */}
+      <Box
+        sx={{
+          position: 'relative',
+          textAlign: 'center',
+          px: { xs: 3, md: 4 },
+          py: { xs: 3, md: 4 },
+          maxWidth: '800px',
+          color: 'white',
+          borderRadius: 4,
+          backgroundColor: 'rgba(0,0,0,0.45)',
+          backdropFilter: 'blur(2px)',
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+        >
+          <Typography
+            variant="h6"
+            sx={{ textTransform: 'uppercase', letterSpacing: 2, fontWeight: 600, mb: 2 }}
+          >
             Carolina Maria & Carlos Manuel
           </Typography>
-          <Typography variant="h2" sx={{ fontSize: { xs: '2.5rem', md: '4rem' }, fontFamily: 'Playfair Display, serif', mb: 3, lineHeight: 1.2 }}>
+          <Typography
+            variant="h2"
+            sx={{
+              fontSize: { xs: '2.5rem', md: '4rem' },
+              fontFamily: 'Playfair Display, serif',
+              mb: 3,
+              lineHeight: 1.2,
+            }}
+          >
             O Grande Dia Chegou!
           </Typography>
         </motion.div>
 
-        <motion.div initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.05 } } }}>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
+        >
           {[
             'O nosso grande dia está a chegar, e não poderíamos estar mais felizes em partilhar este momento com aqueles que amamos.',
             'Depois de tantos sorrisos, sonhos e planos, chegou o momento de celebrarmos o amor que construímos juntos — um amor simples, sincero e cheio de significado.',
@@ -111,31 +143,76 @@ export default function Hero() {
             'E num dia cheio de emoção, o “sim” aconteceu — o sim para uma nova etapa, para uma vida a dois, para uma história que só está a começar.',
             'Agora, queremos celebrar com todos os que fizeram parte deste percurso tão bonito.',
           ].map((phrase, i) => (
-            <motion.p key={i} variants={textAnim} custom={i} sx={{ mb: 1.5, fontSize: '1.1rem', lineHeight: 1.5, opacity: 0.95 }}>
+            <motion.p
+              key={i}
+              variants={textAnim}
+              custom={i}
+              style={{
+                marginBottom: '0.6rem',
+                fontSize: '1.1rem',
+                lineHeight: 1.5,
+                opacity: 0.95,
+              }}
+            >
               {phrase}
             </motion.p>
           ))}
         </motion.div>
 
-        <Box sx={{ mt: 6, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2, justifyContent: 'center' }}>
-          <Button component={Link} to="/rsvp" variant="contained" size="large" sx={{ backgroundColor: theme.palette.primary.dark, color: '#FFF', '&:hover': { backgroundColor: theme.palette.primary.dark } }}>
+        <Box
+          sx={{
+            mt: 6,
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 2,
+            justifyContent: 'center',
+          }}
+        >
+          <Button
+            component={Link}
+            to="/rsvp"
+            variant="contained"
+            size="large"
+            sx={{
+              backgroundColor: theme.palette.primary.dark,
+              color: '#FFF',
+              '&:hover': { backgroundColor: theme.palette.primary.dark },
+            }}
+          >
             Confirmar Presença
           </Button>
-         <Grid container sx={{justifyContent: 'center', gap: 2 }}>
-          {[{ label: 'Dias', value: days }, { label: 'Horas', value: hours }, { label: 'Minutos', value: minutes }, { label: 'Segundos', value: seconds }].map((unit, i) => (
-            <motion.div
-              key={unit.label}
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ delay: 1 + i * 0.1, duration: 0.5 }}
-              whileHover={{ scale: 1.05 }}
-              sx={{ textAlign: 'center', p: 2, background: 'rgba(0,0,0,0.2)', borderRadius: '1rem', minWidth: 60 }}
-            >
-              <Typography variant="h4" sx={{ fontWeight: 'bold', color: theme.palette.secondary.main }}>{unit.value}</Typography>
-              <Typography variant="caption">{unit.label}</Typography>
-            </motion.div>
-          ))}
-        </Grid>
+
+          <Grid container sx={{ justifyContent: 'center', gap: 2 }}>
+            {[
+              { label: 'Dias', value: days },
+              { label: 'Horas', value: hours },
+              { label: 'Minutos', value: minutes },
+              { label: 'Segundos', value: seconds },
+            ].map((unit, i) => (
+              <motion.div
+                key={unit.label}
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 1 + i * 0.1, duration: 0.5 }}
+                whileHover={{ scale: 1.05 }}
+                style={{
+                  textAlign: 'center',
+                  padding: 16,
+                  background: 'rgba(0,0,0,0.2)',
+                  borderRadius: '1rem',
+                  minWidth: 60,
+                }}
+              >
+                <Typography
+                  variant="h4"
+                  sx={{ fontWeight: 'bold', color: theme.palette.secondary.main }}
+                >
+                  {unit.value}
+                </Typography>
+                <Typography variant="caption">{unit.label}</Typography>
+              </motion.div>
+            ))}
+          </Grid>
         </Box>
       </Box>
     </Box>
