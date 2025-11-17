@@ -36,8 +36,14 @@ export default function Navbar() {
     { label: 'Início', to: '/' },
     { label: 'Confirmar Presença', to: '/rsvp' },
     { label: 'Lista de Presentes', to: '/gifts' },
-    { label: 'VIP Fotos', to: '/vip' },
     { label: 'Manual dos Convidados', to: '/convidate-tips' },
+    {
+      label:
+        'Local da cerimónia e festa (Liberado após o envio dos convites oficiais)',
+      to: '/cerimonia',
+      disabled: true,
+    },
+    { label: 'VIP Fotos', to: '/vip' }
   ];
 
   const drawerContent = (
@@ -47,7 +53,7 @@ export default function Navbar() {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', mb: 2 }}>
         <IconButton
           aria-label="Fechar menu"
           onClick={toggleDrawer(false)}
@@ -93,10 +99,27 @@ export default function Navbar() {
                         link.label
                       )
                     }
-                    sx={{ textAlign: 'center' }}
+                    sx={{ textAlign: 'left' }}
                   />
                 </ListItem>
               </Tooltip>
+            );
+          }
+
+          if (link.disabled) {
+            return (
+              <ListItem
+                key={link.label}
+                sx={{
+                  color: theme.palette.text.disabled,
+                  cursor: 'not-allowed',
+                }}
+              >
+                <ListItemText
+                  primary={link.label}
+                  sx={{ textAlign: 'left' }}
+                />
+              </ListItem>
             );
           }
 
@@ -110,14 +133,21 @@ export default function Navbar() {
                 '&.active .MuiListItemText-primary': { fontWeight: 600 },
               }}
             >
-              <ListItemText primary={link.label} sx={{ textAlign: 'center' }} />
+              <ListItemText primary={link.label} sx={{ textAlign: 'left' }} />
             </ListItem>
           );
         })}
       </List>
 
       {user && (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25, alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1.25,
+            alignItems: 'center',
+          }}
+        >
           <Button
             variant="outlined"
             onClick={handleEnterAdmin}
@@ -226,6 +256,22 @@ export default function Navbar() {
                   );
                 }
 
+                if (link.disabled) {
+                  return (
+                    <Typography
+                      key={link.label}
+                      sx={{
+                        color: theme.palette.text.disabled,
+                        textDecoration: 'none',
+                        fontSize: '0.875rem',
+                        cursor: 'not-allowed',
+                      }}
+                    >
+                      {link.label}
+                    </Typography>
+                  );
+                }
+
                 return (
                   <Typography
                     key={link.label}
@@ -319,7 +365,7 @@ export default function Navbar() {
         onClose={toggleDrawer(false)}
         PaperProps={{
           sx: {
-            width: '100%',
+            width: '95%',
             backgroundImage: `linear-gradient(
               180deg,
               ${theme.palette.custom.brand50},
