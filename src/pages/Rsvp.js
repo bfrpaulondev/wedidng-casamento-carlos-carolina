@@ -25,14 +25,17 @@ import {
   PendingActions,
   InfoOutlined,
 } from '@mui/icons-material';
-import { AppContext } from '../contexts/AppContext';
 import confetti from 'canvas-confetti';
+
+import { AppContext } from '../contexts/AppContext';
+import Gate from '../components/Gate';
 
 const MotionBox = motion(Box);
 
 export default function Rsvp() {
   const theme = useTheme();
   const {
+    user,
     isAdmin,
     rsvps,
     myRsvp,
@@ -79,7 +82,7 @@ export default function Rsvp() {
         spread: 70,
         origin: { y: 0.6 },
       });
-    } catch { }
+    } catch {}
 
     return created;
   };
@@ -93,162 +96,194 @@ export default function Rsvp() {
         status === 'APPROVED'
           ? 'Presença aprovada.'
           : status === 'REJECTED'
-            ? 'Pedido marcado como não aprovado.'
-            : 'Status atualizado.',
+          ? 'Pedido marcado como não aprovado.'
+          : 'Status atualizado.',
       severity: 'info',
     });
   };
 
-  const envelopeBgTop = theme.palette.custom?.brand50 || theme.palette.background.paper;
-  const envelopeBgBottom = theme.palette.custom?.brand100 || theme.palette.grey[100];
+  const envelopeBgTop =
+    theme.palette.custom?.brand50 || theme.palette.background.paper;
+  const envelopeBgBottom =
+    theme.palette.custom?.brand100 || theme.palette.grey[100];
   const accent = theme.palette.custom?.brand600 || theme.palette.primary.main;
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        py: { xs: 6, md: 10 },
-        px: { xs: 2, md: 4 },
-        background: `radial-gradient(circle at top, ${envelopeBgTop} 0, ${theme.palette.background.default} 45%, ${theme.palette.background.paper} 100%)`,
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-    >
-      <Box sx={{ width: '100%', maxWidth: 1100 }}>
-        <MotionBox
-          ref={envelopeRef}
-          initial={{ opacity: 0, y: 40, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.7, ease: 'easeOut' }}
-          sx={{
-            position: 'relative',
-            borderRadius: '1.75rem',
-            overflow: 'hidden',
-            boxShadow: '0 18px 45px rgba(15,23,42,0.18)',
-            background: `linear-gradient(145deg, ${envelopeBgTop}, ${envelopeBgBottom})`,
-            px: { xs: 2.5, md: 4 },
-            pt: { xs: 4, md: 5 },
-            pb: { xs: 4.5, md: 5.5 },
-          }}
-        >
+    <Box sx={{ overflow: 'hidden', minHeight: '100vh' }}>
+      <AnimatePresence mode="wait">
+        {!user ? (
+          <Gate key="gate" />
+        ) : (
           <Box
+            key="content"
             sx={{
-              position: 'absolute',
-              inset: 0,
-              opacity: 0.18,
-              backgroundImage: `radial-gradient(circle at 0 0, ${accent}, transparent 60%), radial-gradient(circle at 100% 100%, ${theme.palette.secondary.main}, transparent 55%)`,
-              pointerEvents: 'none',
+              minHeight: '100vh',
+              py: { xs: 6, md: 10 },
+              px: { xs: 2, md: 4 },
+              background: `radial-gradient(circle at top, ${envelopeBgTop} 0, ${theme.palette.background.default} 45%, ${theme.palette.background.paper} 100%)`,
+              display: 'flex',
+              justifyContent: 'center',
             }}
-          />
-
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: '52%',
-              background: `linear-gradient(180deg, ${theme.palette.common.white}, transparent 80%)`,
-              clipPath: 'polygon(0 0, 100% 0, 50% 94%)',
-              opacity: 0.8,
-              pointerEvents: 'none',
-            }}
-          />
-
-          <Box sx={{ position: 'relative', zIndex: 1 }}>
-            <HeaderSection pendingRsvps={pendingRsvps} isAdmin={isAdmin} />
-
-            <Grid container spacing={4}>
-              <Grid item xs={12} md={7}>
-                <RsvpForm onSubmit={handleNewRsvp} isAdmin={isAdmin} />
-              </Grid>
-
-              <Grid item xs={12} md={5}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
-                  <RsvpStatusCard myRsvp={myRsvp || myRsvp} />
-
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      mt: 1,
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle2"
-                      sx={{ color: theme.palette.text.secondary }}
-                    >
-                      Lista de convidados confirmados
-                    </Typography>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={showApprovedList}
-                          onChange={(e) => setShowApprovedList(e.target.checked)}
-                          size="small"
-                        />
-                      }
-                      label={
-                        <Typography
-                          sx={{ fontSize: '.8rem', color: theme.palette.text.secondary }}
-                        >
-                          Mostrar
-                        </Typography>
-                      }
-                      sx={{ m: 0 }}
-                    />
-                  </Box>
-
-                  <AnimatePresence initial={false}>
-                    {showApprovedList && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        transition={{ duration: 0.25 }}
-                      >
-                        <RsvpList approvedRsvps={approvedRsvps} />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </Box>
-              </Grid>
-            </Grid>
-
-            {isAdmin && (
-              <>
-                <Divider
+          >
+            <Box sx={{ width: '100%', maxWidth: 1100 }}>
+              <MotionBox
+                ref={envelopeRef}
+                initial={{ opacity: 0, y: 40, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.7, ease: 'easeOut' }}
+                sx={{
+                  position: 'relative',
+                  borderRadius: '1.75rem',
+                  overflow: 'hidden',
+                  boxShadow: '0 18px 45px rgba(15,23,42,0.18)',
+                  background: `linear-gradient(145deg, ${envelopeBgTop}, ${envelopeBgBottom})`,
+                  px: { xs: 2.5, md: 4 },
+                  pt: { xs: 4, md: 5 },
+                  pb: { xs: 4.5, md: 5.5 },
+                }}
+              >
+                <Box
                   sx={{
-                    my: 4,
-                    borderColor: `${theme.palette.custom?.brand200 || theme.palette.divider}80`,
+                    position: 'absolute',
+                    inset: 0,
+                    opacity: 0.18,
+                    backgroundImage: `radial-gradient(circle at 0 0, ${accent}, transparent 60%), radial-gradient(circle at 100% 100%, ${theme.palette.secondary.main}, transparent 55%)`,
+                    pointerEvents: 'none',
                   }}
                 />
-                <ModerationPanel
-                  rsvps={pendingRsvps}
-                  onUpdateStatus={handleUpdateStatus}
-                />
-              </>
-            )}
-          </Box>
-        </MotionBox>
 
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={4000}
-          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        >
-          <Alert
-            onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-            severity={snackbar.severity}
-            variant="filled"
-            sx={{ borderRadius: '999px' }}
-          >
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </Box>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '52%',
+                    background: `linear-gradient(180deg, ${theme.palette.common.white}, transparent 80%)`,
+                    clipPath: 'polygon(0 0, 100% 0, 50% 94%)',
+                    opacity: 0.8,
+                    pointerEvents: 'none',
+                  }}
+                />
+
+                <Box sx={{ position: 'relative', zIndex: 1 }}>
+                  <HeaderSection pendingRsvps={pendingRsvps} isAdmin={isAdmin} />
+
+                  <Grid container spacing={4}>
+                    <Grid item xs={12} md={7}>
+                      <RsvpForm onSubmit={handleNewRsvp} isAdmin={isAdmin} />
+                    </Grid>
+
+                    <Grid item xs={12} md={5}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 2.5,
+                        }}
+                      >
+                        <RsvpStatusCard myRsvp={myRsvp || myRsvp} />
+
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            mt: 1,
+                          }}
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ color: theme.palette.text.secondary }}
+                          >
+                            Lista de convidados confirmados
+                          </Typography>
+                          <FormControlLabel
+                            control={
+                              <Switch
+                                checked={showApprovedList}
+                                onChange={(e) =>
+                                  setShowApprovedList(e.target.checked)
+                                }
+                                size="small"
+                              />
+                            }
+                            label={
+                              <Typography
+                                sx={{
+                                  fontSize: '.8rem',
+                                  color: theme.palette.text.secondary,
+                                }}
+                              >
+                                Mostrar
+                              </Typography>
+                            }
+                            sx={{ m: 0 }}
+                          />
+                        </Box>
+
+                        <AnimatePresence initial={false}>
+                          {showApprovedList && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 12 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 10 }}
+                              transition={{ duration: 0.25 }}
+                            >
+                              <RsvpList approvedRsvps={approvedRsvps} />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </Box>
+                    </Grid>
+                  </Grid>
+
+                  {isAdmin && (
+                    <>
+                      <Divider
+                        sx={{
+                          my: 4,
+                          borderColor: `${
+                            theme.palette.custom?.brand200 ||
+                            theme.palette.divider
+                          }80`,
+                        }}
+                      />
+                      <ModerationPanel
+                        rsvps={pendingRsvps}
+                        onUpdateStatus={handleUpdateStatus}
+                      />
+                    </>
+                  )}
+                </Box>
+              </MotionBox>
+
+              <Snackbar
+                open={snackbar.open}
+                autoHideDuration={4000}
+                onClose={() =>
+                  setSnackbar((s) => ({ ...s, open: false }))
+                }
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                <Alert
+                  onClose={() =>
+                    setSnackbar((s) => ({ ...s, open: false }))
+                  }
+                  severity={snackbar.severity}
+                  variant="filled"
+                  sx={{ borderRadius: '999px' }}
+                >
+                  {snackbar.message}
+                </Alert>
+              </Snackbar>
+            </Box>
+          </Box>
+        )}
+      </AnimatePresence>
     </Box>
   );
 }
@@ -274,7 +309,9 @@ function HeaderSection({ pendingRsvps, isAdmin }) {
           sx={{
             letterSpacing: '.22em',
             textTransform: 'uppercase',
-            color: theme.palette.custom?.brand500 || theme.palette.text.secondary,
+            color:
+              theme.palette.custom?.brand500 ||
+              theme.palette.text.secondary,
             fontSize: '.72rem',
           }}
         >
@@ -298,8 +335,8 @@ function HeaderSection({ pendingRsvps, isAdmin }) {
             color: theme.palette.text.secondary,
           }}
         >
-          Um envelope digital para receber quem vai celebrar connosco o grande dia.
-          Preenche com carinho.
+          Um envelope digital para receber quem vai celebrar connosco o
+          grande dia. Preenche com carinho.
         </Typography>
       </Box>
 
@@ -337,11 +374,21 @@ function HeaderSection({ pendingRsvps, isAdmin }) {
               color: theme.palette.text.secondary,
             }}
           >
-            Modo noivos ativo. Abaixo, podes aprovar ou recusar os pedidos de presença.
+            Modo noivos ativo. Abaixo, podes aprovar ou recusar os pedidos
+            de presença.
           </Typography>
         )}
 
-        <Box sx={{ mt: 1, display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
+        <Box
+          sx={{
+            mt: 1,
+            display: 'flex',
+            justifyContent: {
+              xs: 'flex-start',
+              md: 'flex-end',
+            },
+          }}
+        >
           <Tooltip title="Pessoas não convidadas podem pedir presença; cabe aos noivos aceitar ou não.">
             <IconButton size="small" sx={{ color: accent }}>
               <InfoOutlined fontSize="small" />
@@ -378,7 +425,9 @@ function RsvpForm({ onSubmit, isAdmin }) {
 
   const handleChange = (field) => (event) => {
     const value =
-      field === 'guests' ? event.target.value.replace(/\D/g, '') : event.target.value;
+      field === 'guests'
+        ? event.target.value.replace(/\D/g, '')
+        : event.target.value;
     setValues((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -392,9 +441,7 @@ function RsvpForm({ onSubmit, isAdmin }) {
         ...values,
         guests: Number(values.guests) || 1,
       });
-    } catch (err) {
-      // opcional: snackbar de erro aqui
-    }
+    } catch (err) {}
     setSubmitting(false);
   };
 
@@ -409,7 +456,7 @@ function RsvpForm({ onSubmit, isAdmin }) {
         position: 'relative',
         borderRadius: '1.25rem',
         backgroundColor: `${theme.palette.common.white}E6`,
-        boxShadow: '0 10px 30px rgba(15,23,42,0.12)',
+        boxShadow: '0 10px 30px rgba(15,23,42,0.12)`,
         p: { xs: 2.5, md: 3 },
         overflow: 'hidden',
       }}
@@ -418,8 +465,9 @@ function RsvpForm({ onSubmit, isAdmin }) {
         sx={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: `radial-gradient(circle at 0 0, ${theme.palette.custom?.brand100 || theme.palette.grey[100]
-            }, transparent 55%)`,
+          backgroundImage: `radial-gradient(circle at 0 0, ${
+            theme.palette.custom?.brand100 || theme.palette.grey[100]
+          }, transparent 55%)`,
           opacity: 0.7,
           pointerEvents: 'none',
         }}
@@ -443,8 +491,8 @@ function RsvpForm({ onSubmit, isAdmin }) {
             color: theme.palette.text.secondary,
           }}
         >
-          Preenche os teus dados para pedir presença no nosso casamento. A confirmação
-          final será feita pelos noivos.
+          Preenche os teus dados para pedir presença no nosso casamento.
+          A confirmação final será feita pelos noivos.
         </Typography>
 
         {isAdmin && (
@@ -456,8 +504,8 @@ function RsvpForm({ onSubmit, isAdmin }) {
               backgroundColor: `${theme.palette.info.light}16`,
             }}
           >
-            Estás em modo noivos (admin). O formulário está desativado; usa a área de
-            moderação mais abaixo.
+            Estás em modo noivos (admin). O formulário está desativado; usa
+            a área de moderação mais abaixo.
           </Alert>
         )}
 
@@ -484,7 +532,11 @@ function RsvpForm({ onSubmit, isAdmin }) {
               error={Boolean(errors.guests)}
               helperText={errors.guests}
               disabled={disabled}
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 1 }}
+              inputProps={{
+                inputMode: 'numeric',
+                pattern: '[0-9]*',
+                min: 1,
+              }}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -511,7 +563,9 @@ function RsvpForm({ onSubmit, isAdmin }) {
           </Grid>
         </Grid>
 
-        <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 1.5 }}>
+        <Box
+          sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 1.5 }}
+        >
           <Button
             type="submit"
             disabled={disabled || submitting}
@@ -520,11 +574,14 @@ function RsvpForm({ onSubmit, isAdmin }) {
               px: 3.5,
               py: 1,
               textTransform: 'none',
-              backgroundColor: theme.palette.custom?.brand600 || theme.palette.primary.dark,
+              backgroundColor:
+                theme.palette.custom?.brand600 || theme.palette.primary.dark,
               color: '#fff',
               fontWeight: 500,
               '&:hover': {
-                backgroundColor: theme.palette.custom?.brand700 || theme.palette.primary.main,
+                backgroundColor:
+                  theme.palette.custom?.brand700 ||
+                  theme.palette.primary.main,
                 transform: 'translateY(-1px)',
                 boxShadow: '0 8px 18px rgba(15,23,42,0.18)',
               },
@@ -548,7 +605,7 @@ function RsvpStatusCard({ myRsvp }) {
         sx={{
           borderRadius: '1.1rem',
           backgroundColor: `${theme.palette.common.white}D8`,
-          boxShadow: '0 8px 24px rgba(15,23,42,0.12)',
+          boxShadow: '0 8px 24px rgba(15,23,42,0.12)`,
           p: 2.2,
         }}
       >
@@ -562,8 +619,8 @@ function RsvpStatusCard({ myRsvp }) {
           variant="body2"
           sx={{ color: theme.palette.text.secondary }}
         >
-          Assim que enviares o teu pedido de presença, o status aparecerá aqui como
-          pendente, aprovado ou não aprovado.
+          Assim que enviares o teu pedido de presença, o status aparecerá
+          aqui como pendente, aprovado ou não aprovado.
         </Typography>
       </Box>
     );
@@ -574,8 +631,8 @@ function RsvpStatusCard({ myRsvp }) {
     status === 'APPROVED'
       ? `${theme.palette.success.light}26`
       : status === 'REJECTED'
-        ? `${theme.palette.error.light}24`
-        : `${theme.palette.warning.light}24`;
+      ? `${theme.palette.error.light}24`
+      : `${theme.palette.warning.light}24`;
 
   const icon =
     status === 'APPROVED' ? (
@@ -590,8 +647,8 @@ function RsvpStatusCard({ myRsvp }) {
     status === 'APPROVED'
       ? 'Presença aprovada'
       : status === 'REJECTED'
-        ? 'Pedido não aprovado'
-        : 'Pedido pendente';
+      ? 'Pedido não aprovado'
+      : 'Pedido pendente';
 
   return (
     <MotionBox
@@ -601,7 +658,7 @@ function RsvpStatusCard({ myRsvp }) {
       sx={{
         borderRadius: '1.1rem',
         backgroundColor: bg,
-        boxShadow: '0 8px 24px rgba(15,23,42,0.12)',
+        boxShadow: '0 8px 24px rgba(15,23,42,0.12)`,
         p: 2.2,
       }}
     >
@@ -633,7 +690,11 @@ function RsvpStatusCard({ myRsvp }) {
       {status === 'PENDING' && (
         <Typography
           variant="caption"
-          sx={{ display: 'block', mt: 1, color: theme.palette.text.secondary }}
+          sx={{
+            display: 'block',
+            mt: 1,
+            color: theme.palette.text.secondary,
+          }}
         >
           Assim que os noivos confirmarem, o status será atualizado.
         </Typography>
@@ -641,15 +702,24 @@ function RsvpStatusCard({ myRsvp }) {
       {status === 'APPROVED' && (
         <Typography
           variant="caption"
-          sx={{ display: 'block', mt: 1, color: theme.palette.text.secondary }}
+          sx={{
+            display: 'block',
+            mt: 1,
+            color: theme.palette.text.secondary,
+          }}
         >
-          A tua presença já está na nossa lista. Obrigado por celebrares connosco.
+          A tua presença já está na nossa lista. Obrigado por celebrares
+          connosco.
         </Typography>
       )}
       {status === 'REJECTED' && (
         <Typography
           variant="caption"
-          sx={{ display: 'block', mt: 1, color: theme.palette.text.secondary }}
+          sx={{
+            display: 'block',
+            mt: 1,
+            color: theme.palette.text.secondary,
+          }}
         >
           Caso aches que houve algum erro, fala diretamente com os noivos.
         </Typography>
@@ -674,8 +744,8 @@ function RsvpList({ approvedRsvps }) {
           variant="body2"
           sx={{ color: theme.palette.text.secondary }}
         >
-          Assim que os pedidos forem aprovados, os convidados confirmados começam a
-          aparecer aqui.
+          Assim que os pedidos forem aprovados, os convidados confirmados
+          começam a aparecer aqui.
         </Typography>
       </Box>
     );
@@ -713,7 +783,10 @@ function RsvpList({ approvedRsvps }) {
             <Box sx={{ mr: 1 }}>
               <Typography
                 variant="body2"
-                sx={{ fontWeight: 500, color: theme.palette.text.primary }}
+                sx={{
+                  fontWeight: 500,
+                  color: theme.palette.text.primary,
+                }}
               >
                 {r.name}
               </Typography>
@@ -735,10 +808,15 @@ function RsvpList({ approvedRsvps }) {
             </Box>
             <Chip
               icon={<Group fontSize="small" />}
-              label={`${r.guests} ${r.guests > 1 ? 'pessoas' : 'pessoa'}`}
+              label={`${r.guests} ${
+                r.guests > 1 ? 'pessoas' : 'pessoa'
+              }`}
               size="small"
               sx={{
-                backgroundColor: `${theme.palette.custom?.brand50 || theme.palette.grey[100]}B0`,
+                backgroundColor: `${
+                  theme.palette.custom?.brand50 ||
+                  theme.palette.grey[100]
+                }B0`,
               }}
             />
           </MotionBox>
@@ -757,7 +835,7 @@ function ModerationPanel({ rsvps, onUpdateStatus }) {
         sx={{
           borderRadius: '1.25rem',
           backgroundColor: `${theme.palette.common.white}E6`,
-          boxShadow: '0 10px 30px rgba(15,23,42,0.12)',
+          boxShadow: '0 10px 30px rgba(15,23,42,0.12)`,
           p: 2.5,
         }}
       >
@@ -782,7 +860,7 @@ function ModerationPanel({ rsvps, onUpdateStatus }) {
       sx={{
         borderRadius: '1.25rem',
         backgroundColor: `${theme.palette.common.white}E6`,
-        boxShadow: '0 10px 30px rgba(15,23,42,0.12)',
+        boxShadow: '0 10px 30px rgba(15,23,42,0.12)`,
         p: 2.5,
       }}
     >
@@ -796,8 +874,9 @@ function ModerationPanel({ rsvps, onUpdateStatus }) {
         variant="body2"
         sx={{ color: theme.palette.text.secondary, mb: 2.5 }}
       >
-        Aqui os noivos veem todos os pedidos de presença que ainda não foram aprovados.
-        Podem aceitar ou não, inclusive de quem não foi convidado originalmente.
+        Aqui os noivos veem todos os pedidos de presença que ainda não
+        foram aprovados. Podem aceitar ou não, inclusive de quem não foi
+        convidado originalmente.
       </Typography>
 
       <AnimatePresence>
@@ -810,7 +889,10 @@ function ModerationPanel({ rsvps, onUpdateStatus }) {
             transition={{ duration: 0.25 }}
             sx={{
               borderRadius: '1rem',
-              border: `1px solid ${theme.palette.custom?.brand200 || theme.palette.divider}`,
+              border: `1px solid ${
+                theme.palette.custom?.brand200 ||
+                theme.palette.divider
+              }`,
               p: 1.8,
               mb: 1.5,
               display: 'flex',
@@ -847,7 +929,10 @@ function ModerationPanel({ rsvps, onUpdateStatus }) {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: { xs: 'flex-start', md: 'flex-end' },
+                justifyContent: {
+                  xs: 'flex-start',
+                  md: 'flex-end',
+                },
                 gap: 1,
               }}
             >
@@ -872,7 +957,8 @@ function ModerationPanel({ rsvps, onUpdateStatus }) {
                   borderRadius: '999px',
                   textTransform: 'none',
                   backgroundColor:
-                    theme.palette.custom?.brand600 || theme.palette.success.main,
+                    theme.palette.custom?.brand600 ||
+                    theme.palette.success.main,
                 }}
               >
                 Aprovar presença
@@ -884,4 +970,3 @@ function ModerationPanel({ rsvps, onUpdateStatus }) {
     </Box>
   );
 }
-
