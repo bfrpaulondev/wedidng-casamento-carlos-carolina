@@ -288,7 +288,7 @@ export default function Gifts() {
                     }}
                   >
                     Se, no entanto, vocês desejarem contribuir de forma tangível para o
-                    nosso lar doce lar, adoraríamos direcionar essa generosidade para
+                    nosso lar doce lar,gostarimos de direcionar essa generosidade para
                     itens que reflitam nosso estilo simples e atemporal.
                   </Typography>
 
