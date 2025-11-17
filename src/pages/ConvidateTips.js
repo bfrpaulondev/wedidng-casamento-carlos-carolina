@@ -23,7 +23,7 @@ const TIPS = [
     id: 1,
     icon: <CheckCircleOutlineIcon />,
     title: 'Confirme a sua presença',
-    text: 'Use a página de confirmação do site. Isso ajuda na organização de lugares, refeições e toda a logística do dia.',
+    text: 'Use a página de confirmação do site. Isso ajuda na organização de lugares e refeições.',
   },
   {
     id: 2,
@@ -35,19 +35,19 @@ const TIPS = [
     id: 3,
     icon: <ColorLensIcon />,
     title: 'Cores reservadas',
-    text: 'Evite branco, tons de azul e tons de cinza. Estas cores ficam reservadas para o casal e para detalhes do cortejo.',
+    text: 'Evite branco, tons de azul e tons de cinza. Estas cores ficam reservadas para o casal.',
   },
   {
     id: 4,
     icon: <CheckroomIcon />,
     title: 'Trajes modestos e confortáveis',
-    text: 'Escolha um look elegante, confortável e com modéstia: nada muito curto ou transparente. A ideia é estar bonito e à vontade o casamento inteiro.',
+    text: 'Escolha um traje elegante, formal e com modéstia: nada muito curto ou transparente.',
   },
   {
     id: 5,
     icon: <CameraAltIcon />,
     title: 'Use o filtro personalizado',
-    text: 'No dia, teremos um filtro especial para fotos. Use e abuse, registe o momento e partilhe com a cara do nosso casamento.',
+    text: 'No dia, teremos um filtro especial para fotos. Use e abuse, registe o momento e marque-nos nas redes sociais!',
   },
   {
     id: 6,
@@ -59,7 +59,7 @@ const TIPS = [
     id: 7,
     icon: <VolumeOffIcon />,
     title: 'Telemóvel no silencioso',
-    text: 'Mantenha o telemóvel em silêncio para não interromper a cerimónia, os discursos ou aquele momento especial da pista.',
+    text: 'Mantenha o telemóvel em silêncio para não interromper a cerimónia.',
   },
   {
     id: 8,
