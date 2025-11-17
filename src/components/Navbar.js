@@ -47,7 +47,7 @@ export default function Navbar() {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
         <IconButton
           aria-label="Fechar menu"
           onClick={toggleDrawer(false)}
@@ -55,7 +55,9 @@ export default function Navbar() {
             borderRadius: '999px',
             border: `1px solid ${theme.palette.custom.brand200}`,
             width: 36,
+            marginRight:20,
             height: 36,
+
             backgroundColor: theme.palette.custom.brand50,
             '&:hover': { backgroundColor: theme.palette.custom.brand100 },
           }}
