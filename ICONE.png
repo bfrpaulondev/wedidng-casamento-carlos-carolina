@@ -1,0 +1,21 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="120" ry="120" fill="#FFF7F9"></rect>
+
+  <circle cx="200" cy="230" r="90" fill="none" stroke="#F6B3C4" stroke-width="16"></circle>
+  <circle cx="310" cy="230" r="90" fill="none" stroke="#F6B3C4" stroke-width="16"></circle>
+
+  <circle cx="255" cy="230" r="65" fill="#FFE3ED" opacity="0.75"></circle>
+
+  <path d="M256 305
+       C 230 280, 200 260, 200 230
+       C 200 205, 220 188, 240 188
+       C 252 188, 260 194, 256 204
+       C 252 194, 260 188, 272 188
+       C 292 188, 312 205, 312 230
+       C 312 260, 282 280, 256 305 Z" fill="#F06292"></path>
+
+  <text x="50%" y="400" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="48" fill="#D81B60" font-weight="600">
+    Carolina &amp; Carlos
+  </text>
+</svg>
