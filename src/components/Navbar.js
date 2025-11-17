@@ -35,7 +35,7 @@ export default function Navbar() {
   const navLinks = [
     { label: 'Início', to: '/' },
     { label: 'Confirmar Presença', to: '/rsvp' },
-    { label: 'Presentes', to: '/gifts' },
+    { label: 'Lista de Presentes', to: '/gifts' },
     { label: 'VIP Fotos', to: '/vip' },
     { label: 'Manual dos Convidados', to: '/convidate-tips' },
   ];
@@ -49,23 +49,37 @@ export default function Navbar() {
     >
       <List sx={{ mb: 2 }}>
         {navLinks.map(
-          (link) =>
-            !link.hidden && (
-              link.label === 'VIP Fotos' ? (
-                <Tooltip
-                  key={link.label}
-                  title="Disponível apenas no dia do casamento para os convidados postarem fotos e compartilharem vídeos entre si."
-                >
-                  <ListItem
-                    sx={{
-                      color: theme.palette.text.disabled,
-                      cursor: 'not-allowed',
-                    }}
-                  >
-                    <ListItemText primary={link.label} />
-                  </ListItem>
-                </Tooltip>
-              ) : (
+         (link) =>
+  !link.hidden && (
+    link.label === 'VIP Fotos' ? (
+      <Tooltip
+        key={link.label}
+        title="Disponível apenas no dia do casamento para os convidados postarem fotos e compartilharem vídeos entre si."
+      >
+        <ListItem
+          sx={{
+            color: theme.palette.text.disabled,
+            cursor: 'not-allowed',
+          }}
+        >
+          <ListItemText
+            primary={
+              isMobile
+                ? (
+                    <span>
+                      {link.label}{' '}
+                      <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>
+                        (disponível apenas no dia do casamento)
+                      </span>
+                    </span>
+                  )
+                : link.label
+            }
+          />
+        </ListItem>
+      </Tooltip>
+    ) : null
+  ) : (
                 <ListItem
                   key={link.label}
                   component={NavLink}
@@ -291,4 +305,5 @@ export default function Navbar() {
       </Drawer>
     </>
   );
+
 }
