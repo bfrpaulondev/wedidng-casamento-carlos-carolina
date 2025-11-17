@@ -744,8 +744,7 @@ function RsvpList({ approvedRsvps }) {
           variant="body2"
           sx={{ color: theme.palette.text.secondary }}
         >
-          Assim que os pedidos forem aprovados, os convidados confirmados
-          começam a aparecer aqui.
+        Assim que os seus pedidos forem aprovados, aparecerão aqui.
         </Typography>
       </Box>
     );
@@ -970,3 +969,4 @@ function ModerationPanel({ rsvps, onUpdateStatus }) {
     </Box>
   );
 }
+
