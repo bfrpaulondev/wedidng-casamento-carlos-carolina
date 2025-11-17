@@ -456,7 +456,7 @@ function RsvpForm({ onSubmit, isAdmin }) {
         position: 'relative',
         borderRadius: '1.25rem',
         backgroundColor: `${theme.palette.common.white}E6`,
-        boxShadow: '0 10px 30px rgba(15,23,42,0.12)`,
+        boxShadow: '0 10px 30px rgba(15,23,42,0.12)',
         p: { xs: 2.5, md: 3 },
         overflow: 'hidden',
       }}
@@ -605,7 +605,7 @@ function RsvpStatusCard({ myRsvp }) {
         sx={{
           borderRadius: '1.1rem',
           backgroundColor: `${theme.palette.common.white}D8`,
-          boxShadow: '0 8px 24px rgba(15,23,42,0.12)`,
+          boxShadow: '0 8px 24px rgba(15,23,42,0.12)',
           p: 2.2,
         }}
       >
@@ -658,7 +658,7 @@ function RsvpStatusCard({ myRsvp }) {
       sx={{
         borderRadius: '1.1rem',
         backgroundColor: bg,
-        boxShadow: '0 8px 24px rgba(15,23,42,0.12)`,
+        boxShadow: '0 8px 24px rgba(15,23,42,0.12)',
         p: 2.2,
       }}
     >
@@ -835,7 +835,7 @@ function ModerationPanel({ rsvps, onUpdateStatus }) {
         sx={{
           borderRadius: '1.25rem',
           backgroundColor: `${theme.palette.common.white}E6`,
-          boxShadow: '0 10px 30px rgba(15,23,42,0.12)`,
+          boxShadow: '0 10px 30px rgba(15,23,42,0.12)',
           p: 2.5,
         }}
       >
@@ -860,7 +860,7 @@ function ModerationPanel({ rsvps, onUpdateStatus }) {
       sx={{
         borderRadius: '1.25rem',
         backgroundColor: `${theme.palette.common.white}E6`,
-        boxShadow: '0 10px 30px rgba(15,23,42,0.12)`,
+        boxShadow: '0 10px 30px rgba(15,23,42,0.12)',
         p: 2.5,
       }}
     >
