@@ -422,7 +422,7 @@ export default function Gifts() {
                     onCopy={() => handleCopy(HOLDER, 'holder')}
                   />
                   <FieldRow
-                    label="Se desejar enviar por MBWAY pode usar este número)"
+                    label="Se desejar enviar por MBWAY pode usar este número"
                     value={PHONE}
                     copied={copiedField === 'phone'}
                     onCopy={() => handleCopy(PHONE, 'phone')}
