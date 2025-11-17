@@ -13,6 +13,7 @@ import {
   useMediaQuery,
   Tooltip,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
 import { NavLink } from 'react-router-dom';
@@ -46,6 +47,23 @@ export default function Navbar() {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
     >
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <IconButton
+          aria-label="Fechar menu"
+          onClick={toggleDrawer(false)}
+          sx={{
+            borderRadius: '999px',
+            border: `1px solid ${theme.palette.custom.brand200}`,
+            width: 36,
+            height: 36,
+            backgroundColor: theme.palette.custom.brand50,
+            '&:hover': { backgroundColor: theme.palette.custom.brand100 },
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
       <List sx={{ mb: 2 }}>
         {navLinks.map((link) => {
           if (link.hidden) return null;
