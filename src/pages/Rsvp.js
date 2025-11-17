@@ -299,7 +299,7 @@ function HeaderSection({ pendingRsvps, isAdmin }) {
           }}
         >
           Um envelope digital para receber quem vai celebrar connosco o grande dia.
-          Preenche com carinho; a tua presença passa primeiro pela aprovação dos noivos.
+          Preenche com carinho.
         </Typography>
       </Box>
 
@@ -884,3 +884,4 @@ function ModerationPanel({ rsvps, onUpdateStatus }) {
     </Box>
   );
 }
+
