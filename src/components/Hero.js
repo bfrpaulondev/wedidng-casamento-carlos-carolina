@@ -112,7 +112,9 @@ export default function Hero() {
             variant="h6"
             sx={{ textTransform: 'uppercase', letterSpacing: 2, fontWeight: 600, mb: 2 }}
           >
-            Carolina Maria & Carlos Manuel
+            Carolina Maria<br />
+            &<br />
+            Carlos Manuel
           </Typography>
           <Typography
             variant="h2"

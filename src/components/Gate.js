@@ -18,7 +18,7 @@ import { AppContext } from '../contexts/AppContext';
 
 export default function Gate() {
   const theme = useTheme();
-  const { login, user } = useContext(AppContext);
+  const { login, register, user } = useContext(AppContext);
 
   const [open, setOpen] = useState(!user);
   const [mode, setMode] = useState('login'); // 'login' | 'register'
@@ -62,11 +62,23 @@ export default function Gate() {
     setGlobalError('');
 
     try {
-      // o backend decide se faz login ou cadastro com base nos dados/mode
-      await login({ ...formData, mode });
+      if (mode === 'login') {
+        await login({
+          email: formData.email.trim(),
+          password: formData.pass,
+        });
+      } else {
+        await register({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          password: formData.pass,
+          phone: formData.phone.trim(),
+        });
+      }
+
       setOpen(false);
     } catch (err) {
-      setGlobalError(err.message || 'Falha ao autenticar');
+      setGlobalError(err?.message || 'Falha ao autenticar');
     } finally {
       setLoading(false);
     }

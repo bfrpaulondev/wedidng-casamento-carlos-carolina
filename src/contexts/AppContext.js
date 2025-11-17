@@ -8,7 +8,6 @@ const API_URL =
   process.env.REACT_APP_API_URL ||
   'https://wedding-6pnopfkyu-bfrpaulondevs-projects.vercel.app/api';
 
-
 export const WEDDING_DATE = new Date('2026-05-24T15:30:00+01:00');
 
 export const DAILY_PHRASES = [
@@ -118,16 +117,52 @@ export const AppProvider = ({ children }) => {
 
   // --- Auth de convidado (Gate) ---
 
+  // LOGIN: usa apenas /auth/login, não cria user
   const login = async (data) => {
-    const name = (data?.name || '').trim() || 'Convidado';
     const email = (data?.email || '').toLowerCase().trim();
-    const password = data?.pass || data?.password || '';
+    const password = data?.password || data?.pass || '';
 
     if (!email || !password) {
       throw new Error('Email e senha são obrigatórios');
     }
 
-    // 1. tenta registrar
+    let res;
+    try {
+      res = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+    } catch (err) {
+      console.error('Erro de rede em login:', err);
+      throw new Error('Não foi possível contactar o servidor');
+    }
+
+    if (!res.ok) {
+      let msg = 'Credenciais inválidas';
+      try {
+        const errBody = await res.json();
+        if (errBody?.message) msg = errBody.message;
+      } catch {}
+      throw new Error(msg);
+    }
+
+    const body = await res.json();
+    setUser(body.user);
+    setUserToken(body.token);
+    return { mode: 'login', user: body.user };
+  };
+
+  // REGISTER: usa /auth/register, não faz login automático por fallback
+  const register = async (data) => {
+    const name = (data?.name || '').trim() || 'Convidado';
+    const email = (data?.email || '').toLowerCase().trim();
+    const password = data?.password || data?.pass || '';
+
+    if (!email || !password) {
+      throw new Error('Email e senha são obrigatórios');
+    }
+
     let res;
     try {
       res = await fetch(`${API_URL}/auth/register`, {
@@ -140,15 +175,7 @@ export const AppProvider = ({ children }) => {
       throw new Error('Não foi possível contactar o servidor');
     }
 
-    if (res.ok) {
-      const body = await res.json();
-      setUser(body.user);
-      setUserToken(body.token);
-      return { mode: 'register', user: body.user };
-    }
-
-    // se não for conflito (email já existe), erro direto
-    if (res.status !== 409) {
+    if (!res.ok) {
       let msg = 'Erro ao criar conta';
       try {
         const errBody = await res.json();
@@ -157,32 +184,10 @@ export const AppProvider = ({ children }) => {
       throw new Error(msg);
     }
 
-    // 2. já existe → login
-    let loginRes;
-    try {
-      loginRes = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-    } catch (err) {
-      console.error('Erro de rede em login:', err);
-      throw new Error('Não foi possível contactar o servidor');
-    }
-
-    if (!loginRes.ok) {
-      let msg = 'Credenciais inválidas';
-      try {
-        const errBody = await loginRes.json();
-        if (errBody?.message) msg = errBody.message;
-      } catch {}
-      throw new Error(msg);
-    }
-
-    const loginBody = await loginRes.json();
-    setUser(loginBody.user);
-    setUserToken(loginBody.token);
-    return { mode: 'login', user: loginBody.user };
+    const body = await res.json();
+    setUser(body.user);
+    setUserToken(body.token);
+    return { mode: 'register', user: body.user };
   };
 
   const logout = () => {
@@ -370,6 +375,7 @@ export const AppProvider = ({ children }) => {
     user,
     userToken,
     login,
+    register,
     logout,
 
     isAdmin,
@@ -378,6 +384,7 @@ export const AppProvider = ({ children }) => {
 
     rsvps,
     myRsvp,
+    addRsvps: addRsvp, 
     addRsvp,
     fetchAdminRsvps,
     updateRsvpStatus,
@@ -392,4 +399,3 @@ export const AppProvider = ({ children }) => {
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
-
