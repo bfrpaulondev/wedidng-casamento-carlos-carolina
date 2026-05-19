@@ -24,7 +24,7 @@ export default function Gifts() {
     severity: 'success',
   });
 
-  const IBAN = 'PT50003300004571824893905';
+  const IBAN = '´PT50017033870304005193195';
   const HOLDER = 'Carlos Manuel João Gonga';
   const PHONE = '+351 967 963 106';
 
@@ -100,7 +100,7 @@ export default function Gifts() {
             boxShadow: '0 18px 50px rgba(15,23,42,0.20)',
             background: `linear-gradient(145deg, ${bgTop}, ${bgBottom})`,
             px: { xs: 2.5, md: 4 },
-            pt: { xs: 4, md: 5 },
+            : { xs: 4, md: 5 },
             pb: { xs: 4.5, md: 5.5 },
           }}
         >
