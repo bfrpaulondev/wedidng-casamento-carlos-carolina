@@ -100,7 +100,7 @@ export default function Gifts() {
             boxShadow: '0 18px 50px rgba(15,23,42,0.20)',
             background: `linear-gradient(145deg, ${bgTop}, ${bgBottom})`,
             px: { xs: 2.5, md: 4 },
-            : { xs: 4, md: 5 },
+            pt: { xs: 4, md: 5 },
             pb: { xs: 4.5, md: 5.5 },
           }}
         >
@@ -362,9 +362,8 @@ export default function Gifts() {
                 transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
                 sx={{
                   borderRadius: '1.5rem',
-                  background: `linear-gradient(135deg, ${accent}, ${
-                    theme.palette.secondary.main
-                  })`,
+                  background: `linear-gradient(135deg, ${accent}, ${theme.palette.secondary.main
+                    })`,
                   color: '#fff',
                   p: { xs: 2.5, md: 3 },
                   display: 'flex',
