@@ -15,15 +15,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaceIcon from '@mui/icons-material/Place';
 import DirectionsIcon from '@mui/icons-material/Directions';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import RestaurantIcon from '@mui/icons-material/Restaurant';
-import LocalBarIcon from '@mui/icons-material/LocalBar';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import WbSunnyIcon from '@mui/icons-material/WbSunny';
-import NightlightIcon from '@mui/icons-material/Nightlight';
-import CelebrationIcon from '@mui/icons-material/Celebration';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
@@ -38,7 +30,6 @@ import img4 from '../assets/images/quinta-nevada/QN4.jpg';
 import img5 from '../assets/images/quinta-nevada/QN5.jpg';
 import img6 from '../assets/images/quinta-nevada/QN6.jpg';
 import img7 from '../assets/images/quinta-nevada/QN7.jpg';
-import img8 from '../assets/images/quinta-nevada/QN8.jpg';
 
 const MotionBox = motion(Box);
 
@@ -61,60 +52,6 @@ const GALLERY = [
   { src: img5, alt: 'Ambiente da Quinta Nevada 3 ao pôr-do-sol' },
   { src: img6, alt: 'Espaço preparado para a festa na Quinta Nevada 3' },
   { src: img7, alt: 'Decoração de casamento na Quinta Nevada 3' },
-  { src: img8, alt: 'Vista noturna da Quinta Nevada 3 em Palmela' },
-];
-
-// Programa do dia — segue um fluxo clássico de casamento
-const SCHEDULE = [
-  {
-    time: '15:00',
-    title: 'Chegada dos convidados',
-    description:
-      'Recebam-se com calma. Um copo de bem-vindo aguarda-vos nos jardins da Quinta.',
-    icon: <WbSunnyIcon />,
-  },
-  {
-    time: '16:00',
-    title: 'Cerimónia',
-    description:
-      'O momento mais esperado: o “sim” que une a Carolina e o Carlos para sempre.',
-    icon: <FavoriteBorderIcon />,
-  },
-  {
-    time: '17:00',
-    title: 'Receção & aperitivos',
-    description:
-      'Após a cerimónia, brindamos juntos com aperitivos, música suave e muitas fotografias.',
-    icon: <LocalBarIcon />,
-  },
-  {
-    time: '18:30',
-    title: 'Sessão de fotografias',
-    description:
-      'Tempo para registo de memórias com família e amigos. Tragam os vossos melhores sorrisos!',
-    icon: <CameraAltIcon />,
-  },
-  {
-    time: '20:00',
-    title: 'Jantar',
-    description:
-      'Sentamos todos à mesa para um jantar cuidado, partilha de histórias e bons momentos.',
-    icon: <RestaurantIcon />,
-  },
-  {
-    time: '22:00',
-    title: 'Corte do bolo & festa',
-    description:
-      'O corte do bolo abre a pista. Que a noite seja de dança, risos e celebração.',
-    icon: <CelebrationIcon />,
-  },
-  {
-    time: '02:00',
-    title: 'Fim da festa',
-    description:
-      'Despeçamo-nos com um abraço apertado. Obrigado por fazerem parte do nosso dia.',
-    icon: <NightlightIcon />,
-  },
 ];
 
 const HIGHLIGHTS = [
@@ -142,8 +79,6 @@ export default function Ceremony() {
   const blue = theme.palette.custom?.brand600 || theme.palette.primary.main;
   const salmon = theme.palette.secondary?.main || '#F4B79A';
   const bgTop = theme.palette.custom?.brand50 || theme.palette.background.paper;
-  const bgBottom =
-    theme.palette.custom?.brand100 || theme.palette.grey[100];
   const accent = theme.palette.custom?.brand600 || theme.palette.primary.main;
 
   const handleLightboxPrev = () => {
@@ -348,26 +283,27 @@ export default function Ceremony() {
                 </Box>
               </MotionBox>
 
-              {/* GRID PRINCIPAL: PROGRAMA + DESTAQUES */}
+              {/* CARTÃO ENDEREÇO + DESTAQUES (grid 2 colunas em desktop) */}
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: '1.4fr 1fr' },
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
                   gap: { xs: 3, md: 4 },
                   mb: { xs: 4, md: 6 },
                 }}
               >
-                {/* PROGRAMA DO DIA */}
+                {/* Cartão de endereço (estilo "cartão digital") */}
                 <MotionBox
                   initial={{ opacity: 0, x: -25 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
                   transition={{ duration: 0.6, ease: 'easeOut' }}
                   sx={{
-                    borderRadius: '2rem',
-                    background: `linear-gradient(145deg, #ffffffF6, ${bgBottom})`,
-                    boxShadow: '0 16px 38px rgba(15,23,42,0.16)',
-                    p: { xs: 2.5, md: 3.5 },
+                    borderRadius: '1.5rem',
+                    background: `linear-gradient(135deg, ${accent}, ${salmon})`,
+                    color: '#fff',
+                    p: { xs: 2.5, md: 3 },
+                    boxShadow: '0 16px 38px rgba(15,23,42,0.30)',
                     position: 'relative',
                     overflow: 'hidden',
                   }}
@@ -376,390 +312,187 @@ export default function Ceremony() {
                     sx={{
                       position: 'absolute',
                       inset: 0,
-                      opacity: 0.18,
-                      backgroundImage: `radial-gradient(circle at 0 0, ${blue}, transparent 60%), radial-gradient(circle at 100% 100%, ${salmon}, transparent 55%)`,
+                      opacity: 0.22,
+                      backgroundImage:
+                        'radial-gradient(circle at 10% 0, #ffffff, transparent 60%)',
                       pointerEvents: 'none',
                     }}
                   />
                   <Box sx={{ position: 'relative', zIndex: 1 }}>
                     <Typography
-                      variant="overline"
                       sx={{
-                        letterSpacing: '.22em',
+                        fontSize: '.74rem',
+                        letterSpacing: '.18em',
                         textTransform: 'uppercase',
-                        color:
-                          theme.palette.custom?.brand500 ||
-                          theme.palette.text.secondary,
-                        fontSize: '.72rem',
+                        opacity: 0.9,
                       }}
                     >
-                      Programa do dia
+                      Onde encontrar-nos
                     </Typography>
                     <Typography
-                      variant="h4"
+                      variant="h6"
                       sx={{
+                        mt: 1,
+                        mb: 2,
                         fontFamily: 'Playfair Display, serif',
-                        color: theme.palette.text.primary,
-                        mt: 0.5,
-                        mb: 0.5,
-                        fontSize: { xs: '1.6rem', md: '2rem' },
+                        fontWeight: 600,
+                        fontSize: '1.25rem',
                       }}
                     >
-                      Como será o nosso dia
-                    </Typography>
-                    <Typography
-                      sx={{
-                        mb: 3,
-                        maxWidth: 480,
-                        fontSize: '.92rem',
-                        color: theme.palette.text.secondary,
-                      }}
-                    >
-                      Para que possam planear a vossa chegada e disfrutar de
-                      cada momento com a gente, deixamos aqui o programa do dia.
+                      {VENUE_NAME}
                     </Typography>
 
-                    <Box
-                      component="ol"
-                      sx={{
-                        listStyle: 'none',
-                        p: 0,
-                        m: 0,
-                        position: 'relative',
-                        // linha vertical do timeline
-                        '&::before': {
-                          content: '""',
-                          position: 'absolute',
-                          left: { xs: 19, md: 23 },
-                          top: 18,
-                          bottom: 18,
-                          width: 2,
-                          background: `linear-gradient(180deg, ${blue}, ${salmon})`,
-                          opacity: 0.35,
-                          borderRadius: '2px',
-                        },
-                      }}
-                    >
-                      {SCHEDULE.map((item, i) => (
-                        <motion.li
-                          key={item.time}
-                          initial={{ opacity: 0, y: 15 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, amount: 0.4 }}
-                          transition={{
-                            duration: 0.4,
-                            delay: i * 0.05,
-                            ease: 'easeOut',
-                          }}
-                          style={{
-                            display: 'flex',
-                            gap: 16,
-                            paddingBottom: i === SCHEDULE.length - 1 ? 0 : 18,
-                            position: 'relative',
-                            listStyle: 'none',
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              flexShrink: 0,
-                              width: { xs: 40, md: 48 },
-                              height: { xs: 40, md: 48 },
-                              borderRadius: '999px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              background: `radial-gradient(circle at 30% 0, #fff, ${i % 2 ? salmon : blue}25)`,
-                              boxShadow: '0 6px 16px rgba(15,23,42,0.14)',
-                              color: i % 2 ? salmon : blue,
-                              zIndex: 1,
-                            }}
-                          >
-                            {React.cloneElement(item.icon, {
-                              fontSize: isMobile ? 'small' : 'medium',
-                            })}
-                          </Box>
-                          <Box sx={{ flex: 1, pt: 0.4 }}>
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1,
-                                flexWrap: 'wrap',
-                              }}
-                            >
-                              <Typography
-                                sx={{
-                                  fontFamily: 'Playfair Display, serif',
-                                  fontWeight: 700,
-                                  fontSize: '1.05rem',
-                                  color: theme.palette.text.primary,
-                                }}
-                              >
-                                {item.time}
-                              </Typography>
-                              <Typography
-                                variant="body2"
-                                sx={{
-                                  fontWeight: 600,
-                                  color: theme.palette.text.primary,
-                                }}
-                              >
-                                · {item.title}
-                              </Typography>
-                            </Box>
-                            <Typography
-                              variant="body2"
-                              sx={{
-                                mt: 0.4,
-                                color: theme.palette.text.secondary,
-                                lineHeight: 1.6,
-                                fontSize: '.88rem',
-                              }}
-                            >
-                              {item.description}
-                            </Typography>
-                          </Box>
-                        </motion.li>
-                      ))}
-                    </Box>
-
-                    <Box
-                      sx={{
-                        mt: 3,
-                        p: 1.5,
-                        borderRadius: '1rem',
-                        backgroundColor: `${blue}10`,
-                        border: `1px solid ${blue}30`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 1.5,
-                      }}
-                    >
-                      <ScheduleIcon sx={{ color: blue }} />
+                    <Box sx={{ mb: 1.5 }}>
                       <Typography
-                        variant="body2"
                         sx={{
-                          fontSize: '.85rem',
-                          color: theme.palette.text.secondary,
+                          fontSize: '.7rem',
+                          textTransform: 'uppercase',
+                          letterSpacing: '.16em',
+                          opacity: 0.85,
+                          mb: 0.4,
                         }}
                       >
-                        Horário sujeito a pequenos ajustes. Recomendamos chegar
-                        com <strong>15 minutos de antecedência</strong>.
+                        Morada
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: '.95rem',
+                          lineHeight: 1.5,
+                          fontWeight: 500,
+                        }}
+                      >
+                        {VENUE_ADDRESS}
                       </Typography>
                     </Box>
+
+                    <Box sx={{ mb: 2.5 }}>
+                      <Typography
+                        sx={{
+                          fontSize: '.7rem',
+                          textTransform: 'uppercase',
+                          letterSpacing: '.16em',
+                          opacity: 0.85,
+                          mb: 0.4,
+                        }}
+                      >
+                        Coordenadas
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontSize: '.85rem',
+                        }}
+                      >
+                        {VENUE_LAT}, {VENUE_LNG}
+                      </Typography>
+                    </Box>
+
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      disableElevation
+                      startIcon={<DirectionsIcon />}
+                      href={GOOGLE_MAPS_DIR}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{
+                        borderRadius: '999px',
+                        backgroundColor: '#fff',
+                        color: accent,
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        py: 1,
+                        '&:hover': {
+                          backgroundColor: '#fdfdfd',
+                          transform: 'translateY(-1px)',
+                          boxShadow: '0 8px 20px rgba(0,0,0,0.25)',
+                        },
+                        transition: 'all .22s ease',
+                      }}
+                    >
+                      Obter direções
+                    </Button>
                   </Box>
                 </MotionBox>
 
-                {/* COLUNA LATERAL: CARTÃO ENDEREÇO + DESTAQUES */}
-                <Box
+                {/* Destaques do local */}
+                <MotionBox
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: { xs: 3, md: 4 },
+                    borderRadius: '1.5rem',
+                    backgroundColor: '#ffffffE6',
+                    boxShadow: '0 12px 30px rgba(15,23,42,0.14)',
+                    p: { xs: 2.5, md: 3 },
                   }}
                 >
-                  {/* Cartão de endereço (estilo "cartão digital") */}
-                  <MotionBox
-                    initial={{ opacity: 0, x: 25 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                  <Typography
+                    variant="subtitle1"
                     sx={{
-                      borderRadius: '1.5rem',
-                      background: `linear-gradient(135deg, ${accent}, ${salmon})`,
-                      color: '#fff',
-                      p: { xs: 2.5, md: 3 },
-                      boxShadow: '0 16px 38px rgba(15,23,42,0.30)',
-                      position: 'relative',
-                      overflow: 'hidden',
+                      fontFamily: 'Playfair Display, serif',
+                      fontWeight: 600,
+                      mb: 2,
+                      color: theme.palette.text.primary,
                     }}
                   >
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        inset: 0,
-                        opacity: 0.22,
-                        backgroundImage:
-                          'radial-gradient(circle at 10% 0, #ffffff, transparent 60%)',
-                        pointerEvents: 'none',
-                      }}
-                    />
-                    <Box sx={{ position: 'relative', zIndex: 1 }}>
-                      <Typography
+                    Porque escolhemos este lugar
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {HIGHLIGHTS.map((h, i) => (
+                      <Box
+                        key={i}
                         sx={{
-                          fontSize: '.74rem',
-                          letterSpacing: '.18em',
-                          textTransform: 'uppercase',
-                          opacity: 0.9,
+                          display: 'flex',
+                          gap: 1.5,
+                          alignItems: 'flex-start',
                         }}
                       >
-                        Onde encontrar-nos
-                      </Typography>
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          mt: 1,
-                          mb: 2,
-                          fontFamily: 'Playfair Display, serif',
-                          fontWeight: 600,
-                          fontSize: '1.25rem',
-                        }}
-                      >
-                        {VENUE_NAME}
-                      </Typography>
-
-                      <Box sx={{ mb: 1.5 }}>
-                        <Typography
-                          sx={{
-                            fontSize: '.7rem',
-                            textTransform: 'uppercase',
-                            letterSpacing: '.16em',
-                            opacity: 0.85,
-                            mb: 0.4,
-                          }}
-                        >
-                          Morada
-                        </Typography>
-                        <Typography
-                          sx={{
-                            fontSize: '.95rem',
-                            lineHeight: 1.5,
-                            fontWeight: 500,
-                          }}
-                        >
-                          {VENUE_ADDRESS}
-                        </Typography>
-                      </Box>
-
-                      <Box sx={{ mb: 2.5 }}>
-                        <Typography
-                          sx={{
-                            fontSize: '.7rem',
-                            textTransform: 'uppercase',
-                            letterSpacing: '.16em',
-                            opacity: 0.85,
-                            mb: 0.4,
-                          }}
-                        >
-                          Coordenadas
-                        </Typography>
-                        <Typography
-                          sx={{
-                            fontFamily: 'monospace',
-                            fontSize: '.85rem',
-                          }}
-                        >
-                          {VENUE_LAT}, {VENUE_LNG}
-                        </Typography>
-                      </Box>
-
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        disableElevation
-                        startIcon={<DirectionsIcon />}
-                        href={GOOGLE_MAPS_DIR}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          borderRadius: '999px',
-                          backgroundColor: '#fff',
-                          color: accent,
-                          textTransform: 'none',
-                          fontWeight: 600,
-                          py: 1,
-                          '&:hover': {
-                            backgroundColor: '#fdfdfd',
-                            transform: 'translateY(-1px)',
-                            boxShadow: '0 8px 20px rgba(0,0,0,0.25)',
-                          },
-                          transition: 'all .22s ease',
-                        }}
-                      >
-                        Obter direções
-                      </Button>
-                    </Box>
-                  </MotionBox>
-
-                  {/* Destaques do local */}
-                  <MotionBox
-                    initial={{ opacity: 0, y: 25 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
-                    sx={{
-                      borderRadius: '1.5rem',
-                      backgroundColor: '#ffffffE6',
-                      boxShadow: '0 12px 30px rgba(15,23,42,0.14)',
-                      p: { xs: 2.5, md: 3 },
-                    }}
-                  >
-                    <Typography
-                      variant="subtitle1"
-                      sx={{
-                        fontFamily: 'Playfair Display, serif',
-                        fontWeight: 600,
-                        mb: 2,
-                        color: theme.palette.text.primary,
-                      }}
-                    >
-                      Porque escolhemos este lugar
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      {HIGHLIGHTS.map((h, i) => (
                         <Box
-                          key={i}
                           sx={{
+                            flexShrink: 0,
+                            width: 28,
+                            height: 28,
+                            borderRadius: '999px',
+                            background: `linear-gradient(135deg, ${blue}, ${salmon})`,
+                            color: '#fff',
                             display: 'flex',
-                            gap: 1.5,
-                            alignItems: 'flex-start',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '.8rem',
+                            fontWeight: 700,
+                            mt: 0.2,
                           }}
                         >
-                          <Box
+                          {i + 1}
+                        </Box>
+                        <Box>
+                          <Typography
                             sx={{
-                              flexShrink: 0,
-                              width: 28,
-                              height: 28,
-                              borderRadius: '999px',
-                              background: `linear-gradient(135deg, ${blue}, ${salmon})`,
-                              color: '#fff',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '.8rem',
-                              fontWeight: 700,
-                              mt: 0.2,
+                              fontWeight: 600,
+                              fontSize: '.95rem',
+                              color: theme.palette.text.primary,
+                              mb: 0.3,
                             }}
                           >
-                            {i + 1}
-                          </Box>
-                          <Box>
-                            <Typography
-                              sx={{
-                                fontWeight: 600,
-                                fontSize: '.95rem',
-                                color: theme.palette.text.primary,
-                                mb: 0.3,
-                              }}
-                            >
-                              {h.title}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              sx={{
-                                color: theme.palette.text.secondary,
-                                fontSize: '.85rem',
-                                lineHeight: 1.6,
-                              }}
-                            >
-                              {h.text}
-                            </Typography>
-                          </Box>
+                            {h.title}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: theme.palette.text.secondary,
+                              fontSize: '.85rem',
+                              lineHeight: 1.6,
+                            }}
+                          >
+                            {h.text}
+                          </Typography>
                         </Box>
-                      ))}
-                    </Box>
-                  </MotionBox>
-                </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                </MotionBox>
               </Box>
 
               {/* GALERIA DE FOTOS */}
