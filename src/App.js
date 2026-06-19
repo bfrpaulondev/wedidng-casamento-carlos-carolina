@@ -12,6 +12,7 @@ import Rsvp from './pages/Rsvp';
 import Gifts from './pages/Gifts';
 import Honeymoon from './pages/ConvidateTips';
 import Vip from './pages/Vip';
+import Ceremony from './pages/Ceremony';
 
 function AppContent() {
   return (
@@ -31,6 +32,7 @@ function AppContent() {
           <Route path="/gifts" element={<Gifts />} />
           <Route path="/convidate-tips" element={<Honeymoon />} />
           <Route path="/vip" element={<Vip />} />
+          <Route path="/cerimonia" element={<Ceremony />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Box>

@@ -37,12 +37,7 @@ export default function Navbar() {
     { label: 'Confirmar Presença', to: '/rsvp' },
     { label: 'Lista de Presentes', to: '/gifts' },
     { label: 'Manual dos Convidados', to: '/convidate-tips' },
-    {
-      label:
-        'Local da cerimónia e festa (Liberado após o envio dos convites oficiais)',
-      to: '/cerimonia',
-      disabled: true,
-    },
+    { label: 'Local da Cerimónia', to: '/cerimonia' },
     { label: 'VIP Fotos', to: '/vip' }
   ];
 
