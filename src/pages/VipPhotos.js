@@ -65,13 +65,16 @@ const FILTERS = [
     id: 'classic',
     name: 'Clássico',
     icon: <AutoAwesomeIcon />,
-    description: 'Frame dourado com lauréis e a data do casamento',
-    // CSS filter aplicado à imagem
-    cssFilter: 'saturate(1.05) contrast(1.03)',
-    // Cor da moldura / overlay
-    frameColor: '#C9A961',
+    description: 'Cinematográfico dourado com glow, vinheta e partículas',
+    // CSS filter — golden hour + teal&orange suavizado + matte + glow
+    // Sépia quente + saturação média + contraste médio + brilho subtil
+    cssFilter:
+      'sepia(0.32) saturate(1.45) hue-rotate(-12deg) contrast(1.10) brightness(1.04)',
+    // Cor dourada da moldura e dos elementos decorativos
+    frameColor: '#D4AF37',
+    // Overlay (vinheta escura + glow quente central) — aplicado no canvas
     overlayGradient:
-      'linear-gradient(180deg, rgba(20,30,45,0.15) 0%, transparent 25%, transparent 75%, rgba(20,30,45,0.25) 100%)',
+      'radial-gradient(ellipse 75% 75% at 50% 45%, rgba(255,200,120,0.12) 0%, transparent 55%), radial-gradient(ellipse 100% 100% at 50% 50%, transparent 35%, rgba(20,15,30,0.55) 100%)',
     label: '21.06.2026',
     sublabel: 'C&C',
     style: 'gold',
@@ -722,6 +725,340 @@ function PhotoCard({ photo, index, onOpen, onShare, onDelete }) {
 }
 
 // ============================================================================
+// GOLD FILTER PREVIEW — preview ao vivo (em React/CSS) do filtro cinematográfico
+// dourado. Replica em CSS/SVG os efeitos que o canvas desenha na captura.
+// ============================================================================
+function GoldFilterPreview({ frameColor, label, sublabel }) {
+  // Gera posições estáveis para as partículas (memoizado)
+  const particles = React.useMemo(() => {
+    let seed = 42;
+    const rand = () => {
+      seed = (seed * 9301 + 49297) % 233280;
+      return seed / 233280;
+    };
+    const arr = [];
+    // Canto superior direito (40 partículas)
+    for (let i = 0; i < 40; i++) {
+      arr.push({
+        x: 60 + Math.pow(rand(), 1.5) * 40, // % da largura
+        y: Math.pow(rand(), 1.5) * 50, // % da altura
+        size: rand() > 0.85 ? 3 + rand() * 3 : rand() > 0.5 ? 1.5 + rand() : 0.8 + rand() * 0.7,
+        alpha: 0.4 + rand() * 0.55,
+        halo: rand() > 0.7,
+        key: `tr-${i}`,
+      });
+    }
+    // Canto inferior esquerdo (35 partículas)
+    for (let i = 0; i < 35; i++) {
+      arr.push({
+        x: Math.pow(rand(), 1.5) * 45,
+        y: 55 + Math.pow(rand(), 1.5) * 45,
+        size: rand() > 0.85 ? 3 + rand() * 3 : rand() > 0.5 ? 1.5 + rand() : 0.8 + rand() * 0.7,
+        alpha: 0.4 + rand() * 0.55,
+        halo: rand() > 0.7,
+        key: `bl-${i}`,
+      });
+    }
+    // Dispersas (15 partículas)
+    for (let i = 0; i < 15; i++) {
+      arr.push({
+        x: rand() * 100,
+        y: rand() * 100,
+        size: 0.6 + rand() * 1.2,
+        alpha: 0.25 + rand() * 0.35,
+        halo: false,
+        key: `sc-${i}`,
+      });
+    }
+    return arr;
+  }, []);
+
+  return (
+    <>
+      {/* Glow quente central (golden hour) */}
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'radial-gradient(ellipse 75% 75% at 50% 45%, rgba(255,200,120,0.18) 0%, rgba(255,180,90,0.10) 35%, transparent 70%)',
+          pointerEvents: 'none',
+          mixBlendMode: 'screen',
+        }}
+      />
+      {/* Tint dourado global */}
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          background: 'rgba(212, 165, 80, 0.10)',
+          pointerEvents: 'none',
+          mixBlendMode: 'overlay',
+        }}
+      />
+      {/* Vinheta cinematográfica principal */}
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'radial-gradient(ellipse 100% 100% at 50% 50%, transparent 35%, rgba(15,10,25,0.18) 55%, rgba(15,10,25,0.45) 85%, rgba(10,5,20,0.70) 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+      {/* Vinheta extra no canto inferior esquerdo */}
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'radial-gradient(ellipse 45% 55% at 10% 92%, rgba(10,5,25,0.55) 0%, rgba(10,5,25,0.20) 50%, transparent 100%)',
+          pointerEvents: 'none',
+        }}
+      />
+      {/* Partículas douradas */}
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          overflow: 'hidden',
+        }}
+      >
+        {particles.map((p) => (
+          <Box
+            key={p.key}
+            sx={{
+              position: 'absolute',
+              left: `${p.x}%`,
+              top: `${p.y}%`,
+              width: p.size * 2,
+              height: p.size * 2,
+              borderRadius: '50%',
+              backgroundColor: frameColor,
+              opacity: p.alpha,
+              boxShadow: p.halo
+                ? `0 0 ${p.size * 4}px ${frameColor}, 0 0 ${p.size * 2}px ${frameColor}`
+                : `0 0 ${p.size * 1.5}px ${frameColor}80`,
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
+        ))}
+      </Box>
+      {/* Moldura interna dourada (linha fina + linha extra-fina) */}
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: '3.5%',
+          border: `1.5px solid ${frameColor}59`,
+          borderRadius: '.5rem',
+          pointerEvents: 'none',
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: '4.5%',
+          border: `1px solid ${frameColor}2E`,
+          borderRadius: '.4rem',
+          pointerEvents: 'none',
+        }}
+      />
+      {/* Logo C&C com coroa de louros — canto superior esquerdo */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '5%',
+          left: '5%',
+          width: '15%',
+          aspectRatio: '1 / 1',
+          pointerEvents: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <LaurelLogoSVG color={frameColor} />
+      </Box>
+      {/* Texto inferior (data) */}
+      {label && (
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: '5.5%',
+            left: 0,
+            right: 0,
+            textAlign: 'center',
+            pointerEvents: 'none',
+          }}
+        >
+          <Typography
+            sx={{
+              fontFamily: 'Playfair Display, serif',
+              fontWeight: 600,
+              fontSize: '1.1rem',
+              color: '#FFF8E7',
+              textShadow: '0 2px 8px rgba(0,0,0,0.85), 0 1px 3px rgba(0,0,0,0.7)',
+              letterSpacing: '.12em',
+            }}
+          >
+            {label}
+          </Typography>
+        </Box>
+      )}
+      {/* Sub-label "C&C" */}
+      {sublabel && (
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: '2.5%',
+            left: 0,
+            right: 0,
+            textAlign: 'center',
+            pointerEvents: 'none',
+          }}
+        >
+          <Typography
+            sx={{
+              fontFamily: 'Playfair Display, serif',
+              fontStyle: 'italic',
+              fontWeight: 500,
+              fontSize: '.75rem',
+              color: frameColor,
+              textShadow: '0 1px 4px rgba(0,0,0,0.8)',
+              opacity: 0.95,
+            }}
+          >
+            {sublabel}
+          </Typography>
+        </Box>
+      )}
+    </>
+  );
+}
+
+// Logo C&C com coroa de louros — SVG inline (mais nítido que canvas)
+function LaurelLogoSVG({ color = '#D4AF37' }) {
+  return (
+    <svg
+      viewBox="0 0 100 100"
+      width="100%"
+      height="100%"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))' }}
+    >
+      {/* Ramo esquerdo (curva de baixo para cima) */}
+      <g fill={color} stroke={color} strokeWidth="1" opacity="0.92">
+        <path
+          d="M 32 75 Q 22 55 18 30"
+          fill="none"
+          strokeWidth="1.2"
+        />
+        {/* Folhas do ramo esquerdo */}
+        {[
+          { x: 28, y: 70, angle: -50 },
+          { x: 24, y: 62, angle: -45 },
+          { x: 22, y: 54, angle: -40 },
+          { x: 20, y: 46, angle: -35 },
+          { x: 18, y: 38, angle: -30 },
+          { x: 17, y: 30, angle: -25 },
+        ].map((leaf, i) => (
+          <ellipse
+            key={`l-${i}`}
+            cx={leaf.x}
+            cy={leaf.y}
+            rx="6"
+            ry="2.5"
+            transform={`rotate(${leaf.angle} ${leaf.x} ${leaf.y})`}
+          />
+        ))}
+        {/* Folhas opostas (lado de dentro) */}
+        {[
+          { x: 30, y: 68, angle: 50 },
+          { x: 27, y: 60, angle: 45 },
+          { x: 25, y: 52, angle: 40 },
+          { x: 23, y: 44, angle: 35 },
+        ].map((leaf, i) => (
+          <ellipse
+            key={`li-${i}`}
+            cx={leaf.x}
+            cy={leaf.y}
+            rx="5"
+            ry="2"
+            transform={`rotate(${leaf.angle} ${leaf.x} ${leaf.y})`}
+          />
+        ))}
+      </g>
+
+      {/* Ramo direito (espelhado) */}
+      <g fill={color} stroke={color} strokeWidth="1" opacity="0.92">
+        <path
+          d="M 68 75 Q 78 55 82 30"
+          fill="none"
+          strokeWidth="1.2"
+        />
+        {[
+          { x: 72, y: 70, angle: 50 },
+          { x: 76, y: 62, angle: 45 },
+          { x: 78, y: 54, angle: 40 },
+          { x: 80, y: 46, angle: 35 },
+          { x: 82, y: 38, angle: 30 },
+          { x: 83, y: 30, angle: 25 },
+        ].map((leaf, i) => (
+          <ellipse
+            key={`r-${i}`}
+            cx={leaf.x}
+            cy={leaf.y}
+            rx="6"
+            ry="2.5"
+            transform={`rotate(${leaf.angle} ${leaf.x} ${leaf.y})`}
+          />
+        ))}
+        {[
+          { x: 70, y: 68, angle: -50 },
+          { x: 73, y: 60, angle: -45 },
+          { x: 75, y: 52, angle: -40 },
+          { x: 77, y: 44, angle: -35 },
+        ].map((leaf, i) => (
+          <ellipse
+            key={`ri-${i}`}
+            cx={leaf.x}
+            cy={leaf.y}
+            rx="5"
+            ry="2"
+            transform={`rotate(${leaf.angle} ${leaf.x} ${leaf.y})`}
+          />
+        ))}
+      </g>
+
+      {/* Pequena ligação no fundo (arco) */}
+      <path
+        d="M 32 75 Q 50 80 68 75"
+        fill="none"
+        stroke={color}
+        strokeWidth="0.8"
+        opacity="0.6"
+      />
+
+      {/* Monograma C&C */}
+      <text
+        x="50"
+        y="55"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontFamily="Playfair Display, serif"
+        fontSize="22"
+        fontWeight="600"
+        fill={color}
+        style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.6))' }}
+      >
+        C&amp;C
+      </text>
+    </svg>
+  );
+}
+
+// ============================================================================
 // CAMERA MODAL — câmara + seleção de filtro + upload Cloudinary
 // ============================================================================
 function CameraModal({ open, onClose, onCapture, onSnack }) {
@@ -807,7 +1144,7 @@ function CameraModal({ open, onClose, onCapture, onSnack }) {
     const video = videoRef.current;
     const canvas = canvasRef.current;
 
-    // Tamanho do canvas — proporção 4:5 (ideal para Instagram)
+    // Tamanho do canvas final — proporção 4:5 (ideal para Instagram)
     const targetW = 1080;
     const targetH = 1350;
     canvas.width = targetW;
@@ -816,13 +1153,9 @@ function CameraModal({ open, onClose, onCapture, onSnack }) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Espelhar vídeo se for câmara frontal (selfie)
-    if (facingMode === 'user') {
-      ctx.translate(targetW, 0);
-      ctx.scale(-1, 1);
-    }
-
-    // Desenha o frame do vídeo centrado (cover)
+    // Desenha o frame do vídeo centrado (cover) num canvas temporário
+    // — necessário porque ctx.filter precisa ser aplicado ao desenhar
+    //   uma source, não ao canvas em si.
     const vw = video.videoWidth;
     const vh = video.videoHeight;
     if (!vw || !vh) return;
@@ -844,19 +1177,41 @@ function CameraModal({ open, onClose, onCapture, onSnack }) {
       drawY = (targetH - drawH) / 2;
     }
 
-    ctx.drawImage(video, drawX, drawY, drawW, drawH);
-    ctx.setTransform(1, 0, 0, 1, 0, 0); // reset
+    // Canvas temporário com o frame do vídeo (sem filtro, espelhado se selfie)
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = targetW;
+    tempCanvas.height = targetH;
+    const tempCtx = tempCanvas.getContext('2d');
+    if (!tempCtx) return;
 
-    // Aplica filtro CSS ao canvas
+    // Espelhar vídeo se for câmara frontal (selfie)
+    if (facingMode === 'user') {
+      tempCtx.translate(targetW, 0);
+      tempCtx.scale(-1, 1);
+    }
+    tempCtx.drawImage(video, drawX, drawY, drawW, drawH);
+
+    // Agora desenha do temp para o canvas final COM o filtro aplicado
     ctx.filter = selectedFilter.cssFilter;
-    ctx.drawImage(canvas, 0, 0);
+    ctx.drawImage(tempCanvas, 0, 0);
     ctx.filter = 'none';
 
-    // Adiciona overlay (gradiente + moldura + texto)
+    // Adiciona overlay (gradiente + moldura + texto) por cima do filtro
     drawFrame(ctx, targetW, targetH, selectedFilter);
 
-    // Converte para data URL
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    // Converte para data URL (JPEG 92% para manter qualidade mas reduzir tamanho)
+    let dataUrl;
+    try {
+      dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    } catch (err) {
+      console.error('Erro ao gerar data URL:', err);
+      onSnack('Não foi possível capturar a foto. Tenta novamente.', 'error');
+      return;
+    }
+    if (!dataUrl || dataUrl === 'data:,') {
+      onSnack('Captura falhou (vídeo ainda a iniciar?). Tenta novamente.', 'error');
+      return;
+    }
     setCapturedDataUrl(dataUrl);
     setStep('preview');
     stopCamera();
@@ -1020,10 +1375,13 @@ function CameraModal({ open, onClose, onCapture, onSnack }) {
         {/* CONTEÚDO POR STEP */}
         <Box
           sx={{
-            p: { xs: 2, md: 3 },
+            p: { xs: 1.5, sm: 2, md: 3 },
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            width: '100%',
+            maxWidth: 600,
+            mx: 'auto',
           }}
         >
           {/* STEP 1: CÂMARA */}
@@ -1034,7 +1392,7 @@ function CameraModal({ open, onClose, onCapture, onSnack }) {
                 sx={{
                   position: 'relative',
                   width: '100%',
-                  maxWidth: 480,
+                  maxWidth: { xs: '100%', sm: 420, md: 480 },
                   aspectRatio: '4 / 5',
                   borderRadius: '1rem',
                   overflow: 'hidden',
@@ -1105,20 +1463,14 @@ function CameraModal({ open, onClose, onCapture, onSnack }) {
                         pointerEvents: 'none',
                       }}
                     />
-                    {/* Frame dourado para o filtro classic */}
+                    {/* Preview específico do filtro gold (cinematográfico dourado) */}
                     {selectedFilter.style === 'gold' && (
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          inset: '4%',
-                          border: `2px solid ${selectedFilter.frameColor}AA`,
-                          borderRadius: '.5rem',
-                          pointerEvents: 'none',
-                        }}
-                      />
+                      <GoldFilterPreview frameColor={selectedFilter.frameColor} label={selectedFilter.label} sublabel={selectedFilter.sublabel} />
                     )}
+                    {/* Frame dourado para o filtro classic — mantido como fallback */}
+                    {selectedFilter.style === 'gold' && null}
                     {/* Label no topo */}
-                    {selectedFilter.label && (
+                    {selectedFilter.label && selectedFilter.style !== 'gold' && (
                       <Box
                         sx={{
                           position: 'absolute',
@@ -1180,17 +1532,19 @@ function CameraModal({ open, onClose, onCapture, onSnack }) {
                 onChange={(e, val) => val && setFilterId(val)}
                 sx={{
                   mb: 3,
+                  display: 'flex',
                   flexWrap: 'wrap',
+                  gap: 1,
+                  maxWidth: '100%',
                   '& .MuiToggleButtonGroup-grouped': {
                     border: '1px solid rgba(255,255,255,0.18)',
                     borderRadius: '999px !important',
-                    mr: 1,
-                    mb: 1,
-                    px: 2,
+                    flex: '0 0 auto',
+                    px: { xs: 1.5, sm: 2 },
                     py: 0.8,
                     color: '#fff',
                     textTransform: 'none',
-                    fontSize: '.85rem',
+                    fontSize: { xs: '.78rem', sm: '.85rem' },
                     '&.Mui-selected': {
                       backgroundColor: SALMON,
                       color: '#fff',
@@ -1245,7 +1599,7 @@ function CameraModal({ open, onClose, onCapture, onSnack }) {
                 sx={{
                   position: 'relative',
                   width: '100%',
-                  maxWidth: 400,
+                  maxWidth: { xs: '100%', sm: 360, md: 400 },
                   aspectRatio: '4 / 5',
                   borderRadius: '1rem',
                   overflow: 'hidden',
@@ -1335,11 +1689,11 @@ function CameraModal({ open, onClose, onCapture, onSnack }) {
                     border: '1px solid rgba(255,255,255,0.18)',
                     borderRadius: '999px !important',
                     mr: 1,
-                    px: 2.5,
+                    px: { xs: 1.5, sm: 2.5 },
                     py: 1,
                     color: '#fff',
                     textTransform: 'none',
-                    fontSize: '.85rem',
+                    fontSize: { xs: '.78rem', sm: '.85rem' },
                     '&.Mui-selected': {
                       backgroundColor: SALMON,
                       color: '#fff',
@@ -1471,7 +1825,12 @@ function CameraModal({ open, onClose, onCapture, onSnack }) {
 // DRAW FRAME — desenha overlay, moldura e texto no canvas
 // ============================================================================
 function drawFrame(ctx, w, h, filter) {
-  // Overlay gradiente
+  if (filter.style === 'gold') {
+    drawGoldFrame(ctx, w, h, filter);
+    return;
+  }
+
+  // Overlay gradiente para os outros filtros
   const grad = ctx.createLinearGradient(0, 0, 0, h);
   grad.addColorStop(0, 'rgba(20,30,45,0.15)');
   grad.addColorStop(0.25, 'rgba(0,0,0,0)');
@@ -1479,19 +1838,6 @@ function drawFrame(ctx, w, h, filter) {
   grad.addColorStop(1, 'rgba(20,30,45,0.30)');
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
-
-  if (filter.style === 'gold') {
-    // Moldura dourada
-    ctx.strokeStyle = filter.frameColor + 'CC';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(w * 0.04, h * 0.04, w * 0.92, h * 0.92);
-
-    // Brilho de glitter nos cantos
-    drawGlitter(ctx, w * 0.04, h * 0.04, w * 0.08, h * 0.08, filter.frameColor);
-    drawGlitter(ctx, w * 0.88, h * 0.04, w * 0.08, h * 0.08, filter.frameColor);
-    drawGlitter(ctx, w * 0.04, h * 0.88, w * 0.08, h * 0.08, filter.frameColor);
-    drawGlitter(ctx, w * 0.88, h * 0.88, w * 0.08, h * 0.08, filter.frameColor);
-  }
 
   if (filter.style === 'celebration') {
     // Glitter denso em todo o frame
@@ -1539,6 +1885,235 @@ function drawFrame(ctx, w, h, filter) {
     ctx.fillText(filter.sublabel, w / 2, h - h * 0.02);
     ctx.restore();
   }
+}
+
+// ============================================================================
+// GOLD FRAME — filtro cinematográfico dourado (pixel-perfect da referência)
+// ============================================================================
+function drawGoldFrame(ctx, w, h, filter) {
+  // --- 1. GLOW QUENTE CENTRAL (golden hour) ---
+  // Brilho dourado cremoso no centro, mais intenso no rosto (45% vertical)
+  const glow = ctx.createRadialGradient(
+    w * 0.5, h * 0.45, 0,
+    w * 0.5, h * 0.45, Math.max(w, h) * 0.65,
+  );
+  glow.addColorStop(0, 'rgba(255, 200, 120, 0.18)');
+  glow.addColorStop(0.35, 'rgba(255, 180, 90, 0.10)');
+  glow.addColorStop(0.70, 'rgba(200, 140, 70, 0.04)');
+  glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, w, h);
+
+  // --- 2. VINHETA ESCURA (cinematográfica) ---
+  // Mais escura nas bordas, com peso no canto inferior esquerdo e topo esquerdo
+  // (como na foto de referência)
+  const vignette = ctx.createRadialGradient(
+    w * 0.55, h * 0.50, Math.min(w, h) * 0.20,
+    w * 0.50, h * 0.50, Math.max(w, h) * 0.75,
+  );
+  vignette.addColorStop(0, 'rgba(0, 0, 0, 0)');
+  vignette.addColorStop(0.55, 'rgba(15, 10, 25, 0.18)');
+  vignette.addColorStop(0.85, 'rgba(15, 10, 25, 0.45)');
+  vignette.addColorStop(1, 'rgba(10, 5, 20, 0.70)');
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, w, h);
+
+  // Vinheta extra mais forte no canto inferior esquerdo (como na referência)
+  const cornerLE = ctx.createRadialGradient(
+    w * 0.10, h * 0.92, 0,
+    w * 0.10, h * 0.92, Math.max(w, h) * 0.45,
+  );
+  cornerLE.addColorStop(0, 'rgba(10, 5, 25, 0.55)');
+  cornerLE.addColorStop(0.50, 'rgba(10, 5, 25, 0.20)');
+  cornerLE.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = cornerLE;
+  ctx.fillRect(0, 0, w, h);
+
+  // --- 3. TINT DOURADO GLOBAL (golden wash subtil) ---
+  ctx.save();
+  ctx.globalCompositeOperation = 'overlay';
+  ctx.fillStyle = 'rgba(212, 165, 80, 0.10)';
+  ctx.fillRect(0, 0, w, h);
+  ctx.restore();
+
+  // --- 4. PARTÍCULAS DOURADAS (glitter) ---
+  // Concentradas no canto superior direito + canto inferior esquerdo
+  // (como na foto de referência)
+  // Canto superior direito
+  drawGoldParticles(ctx, w * 0.65, 0, w * 0.40, h * 0.50, filter.frameColor, 90);
+  // Canto inferior esquerdo
+  drawGoldParticles(ctx, 0, h * 0.55, w * 0.50, h * 0.45, filter.frameColor, 80);
+  // Algumas partículas esparsas pelo resto
+  drawGoldParticles(ctx, 0, 0, w, h, filter.frameColor, 25, 0.4);
+
+  // --- 5. MOLDURA INTERNA DOURADA SUTIL ---
+  // Linha fina dourada ~4% de margem, muito subtil
+  ctx.save();
+  ctx.strokeStyle = 'rgba(212, 175, 55, 0.35)';
+  ctx.lineWidth = Math.max(1, w * 0.0025);
+  ctx.strokeRect(w * 0.035, h * 0.035, w * 0.93, h * 0.93);
+  // Linha interna ainda mais fina
+  ctx.strokeStyle = 'rgba(212, 175, 55, 0.18)';
+  ctx.lineWidth = Math.max(1, w * 0.0015);
+  ctx.strokeRect(w * 0.045, h * 0.045, w * 0.91, h * 0.91);
+  ctx.restore();
+
+  // --- 6. LOGO C&C COM COROA DE FOLHAS (canto superior esquerdo) ---
+  drawLaurelLogo(ctx, w * 0.06, h * 0.06, w * 0.16, filter.frameColor);
+
+  // --- 7. TEXTO INFERIOR (data centralizada) ---
+  if (filter.label) {
+    ctx.save();
+    // Sombra forte para legibilidade
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+    ctx.shadowBlur = h * 0.012;
+    ctx.shadowOffsetY = h * 0.003;
+    ctx.fillStyle = '#FFF8E7';
+    ctx.font = `600 ${Math.round(h * 0.032)}px "Playfair Display", serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(filter.label, w / 2, h - h * 0.055);
+    ctx.restore();
+  }
+
+  // Sub-label "C&C" discreto abaixo da data
+  if (filter.sublabel) {
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.75)';
+    ctx.shadowBlur = h * 0.008;
+    ctx.fillStyle = 'rgba(212, 175, 55, 0.95)';
+    ctx.font = `italic 500 ${Math.round(h * 0.022)}px "Playfair Display", serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(filter.sublabel, w / 2, h - h * 0.025);
+    ctx.restore();
+  }
+}
+
+// Desenha o logo C&C com coroa de folhas (laurel wreath) dourada
+function drawLaurelLogo(ctx, x, y, size, color) {
+  ctx.save();
+  const cx = x + size / 2;
+  const cy = y + size / 2;
+
+  // Coroa de folhas — dois ramos curvos em torno do monograma
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = Math.max(1, size * 0.015);
+  ctx.globalAlpha = 0.85;
+
+  // Ramo esquerdo
+  drawLaurelBranch(ctx, cx - size * 0.18, cy, -1, size);
+  // Ramo direito (espelhado)
+  drawLaurelBranch(ctx, cx + size * 0.18, cy, 1, size);
+
+  // Monograma "C&C" no centro
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = color;
+  ctx.shadowColor = 'rgba(0,0,0,0.5)';
+  ctx.shadowBlur = size * 0.04;
+  ctx.font = `600 ${Math.round(size * 0.32)}px "Playfair Display", serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('C&C', cx, cy);
+
+  ctx.restore();
+}
+
+// Desenha um ramo de louros (laurel) com folhas
+function drawLaurelBranch(ctx, startX, startY, direction, size) {
+  const branchLen = size * 0.42;
+  const leafSize = size * 0.08;
+  const steps = 7;
+
+  ctx.save();
+  ctx.translate(startX, startY);
+  ctx.scale(direction, 1);
+
+  // Haste curva do ramo
+  ctx.beginPath();
+  ctx.moveTo(0, size * 0.20);
+  ctx.quadraticCurveTo(
+    branchLen * 0.45, 0,
+    branchLen, -size * 0.20,
+  );
+  ctx.stroke();
+
+  // Folhas ao longo do ramo
+  for (let i = 0; i < steps; i++) {
+    const t = (i + 1) / (steps + 1);
+    // Posição ao longo da curva Bézier
+    const px =
+      (1 - t) * (1 - t) * 0 +
+      2 * (1 - t) * t * branchLen * 0.45 +
+      t * t * branchLen;
+    const py =
+      (1 - t) * (1 - t) * size * 0.20 +
+      2 * (1 - t) * t * 0 +
+      t * t * (-size * 0.20);
+
+    // Folha — elipse inclinada
+    ctx.save();
+    ctx.translate(px, py);
+    // Alterna inclinação das folhas
+    const angle = -Math.PI / 3 + (i % 2) * Math.PI / 8;
+    ctx.rotate(angle);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, leafSize, leafSize * 0.45, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+// Partículas douradas com brilho (estilo glitter fino)
+function drawGoldParticles(ctx, x, y, w, h, color, count = 60, alphaMul = 1) {
+  ctx.save();
+  // PRNG estável
+  let seed = (x * 1000 + y * 100 + count) | 0 || 1;
+  const rand = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+
+  // Distribuição ponderada — mais partículas perto do canto (x, y)
+  for (let i = 0; i < count; i++) {
+    // Bias para o canto (x, y) — usa pow para concentrar
+    const biasX = Math.pow(rand(), 1.5);
+    const biasY = Math.pow(rand(), 1.5);
+    const px = x + biasX * w;
+    const py = y + biasY * h;
+
+    // Tamanho variável — algumas grandes, muitas pequenas
+    const sizeRoll = rand();
+    let size, alpha;
+    if (sizeRoll > 0.92) {
+      size = 2 + rand() * 3; // poucas grandes
+      alpha = 0.85 * alphaMul;
+    } else if (sizeRoll > 0.70) {
+      size = 1.2 + rand() * 1.5;
+      alpha = 0.65 * alphaMul;
+    } else {
+      size = 0.6 + rand() * 1.0;
+      alpha = 0.45 * alphaMul;
+    }
+
+    // Brilho principal
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(px, py, size, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Halo suave para partículas maiores
+    if (size > 1.5) {
+      ctx.globalAlpha = alpha * 0.25;
+      ctx.beginPath();
+      ctx.arc(px, py, size * 2.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
 }
 
 function drawGlitter(ctx, x, y, w, h, color, count = 25) {
