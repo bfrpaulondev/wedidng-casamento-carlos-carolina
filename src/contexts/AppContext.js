@@ -8,6 +8,10 @@ const API_URL =
   process.env.REACT_APP_API_URL ||
   'https://wedding-6pnopfkyu-bfrpaulondevs-projects.vercel.app/api';
 
+// Email do dono do site (noivo) — recebe admin automaticamente, sem precisar
+// do código de admin. Útil para testes no telemóvel e acesso direto.
+const OWNER_EMAIL = 'paulonbruno9@gmail.com';
+
 export const WEDDING_DATE = new Date('2026-05-24T15:30:00+01:00');
 
 export const DAILY_PHRASES = [
@@ -107,9 +111,28 @@ export const AppProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // se já for admin e tiver token, carregar lista sempre que mudar
+  // Auto-eleva o dono do site (Bruno) a admin — não precisa do código
   useEffect(() => {
-    if (isAdmin && adminToken) {
+    if (!user) return;
+    const email = (user.email || '').toLowerCase().trim();
+    if (email === OWNER_EMAIL && !isAdmin) {
+      setIsAdmin(true);
+      // token local apenas para permitir carregar RSVPs do admin sem API
+      const bypassToken = 'owner-bypass-' + Date.now();
+      setAdminToken(bypassToken);
+      try {
+        localStorage.setItem('cc_admin', 'true');
+        localStorage.setItem('cc_admin_token', bypassToken);
+      } catch {}
+      console.info('Acesso de admin concedido ao dono do site.');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  // se já for admin e tiver token (válido do backend), carregar lista sempre que mudar
+  useEffect(() => {
+    // não chama a API se for token de bypass do owner (token local, não do backend)
+    if (isAdmin && adminToken && !adminToken.startsWith('owner-bypass-')) {
       fetchAdminRsvps();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
