@@ -36,17 +36,14 @@ const MotionBox = motion(Box);
 // Endereço e links do local
 const VENUE_ADDRESS = 'R. Francisco Assunção Pinho, 2950-091 Palmela';
 const VENUE_FULL_ADDRESS = 'Quinta Nevada 3, R. Francisco Assunção Pinho, 2950-091 Palmela';
-// Links de navegação para os 3 principais apps de mapas — todos usam o
-// endereço textual completo (mesma string que funciona no Google Maps)
+// Links de navegação para os 3 principais apps de mapas
+// Google Maps usa o endereço textual; Apple Maps e Waze usam links
+// de partilha oficiais do próprio local (garantem o sítio certo)
 const GOOGLE_MAPS_DIR = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
   VENUE_FULL_ADDRESS,
 )}`;
-const APPLE_MAPS_DIR = `https://maps.apple.com/?daddr=${encodeURIComponent(
-  VENUE_FULL_ADDRESS,
-)}`;
-const WAZE_DIR = `https://waze.com/ul?q=${encodeURIComponent(
-  VENUE_FULL_ADDRESS,
-)}&navigate=yes`;
+const APPLE_MAPS_DIR = 'https://maps.apple.com/p/VCDMTnLRhWaDiY';
+const WAZE_DIR = 'https://waze.com/ul/heycex64yb';
 
 const GALLERY = [
   { src: img1, alt: 'Vista geral dos jardins da Quinta Nevada 3 em Palmela' },
