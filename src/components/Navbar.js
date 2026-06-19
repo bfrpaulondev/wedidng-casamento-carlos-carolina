@@ -11,7 +11,6 @@ import {
   ListItemText,
   Box,
   useMediaQuery,
-  Tooltip,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -68,38 +67,6 @@ export default function Navbar() {
       <List sx={{ mb: 2 }}>
         {navLinks.map((link) => {
           if (link.hidden) return null;
-
-          if (link.label === 'VIP Fotos') {
-            return (
-              <Tooltip
-                key={link.label}
-                title="Disponível apenas no dia do casamento para os convidados postarem fotos e compartilharem vídeos entre si."
-              >
-                <ListItem
-                  sx={{
-                    color: theme.palette.text.disabled,
-                    cursor: 'not-allowed',
-                  }}
-                >
-                  <ListItemText
-                    primary={
-                      isMobile ? (
-                        <span>
-                          {link.label}{' '}
-                          <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>
-                            (disponível apenas no dia do casamento)
-                          </span>
-                        </span>
-                      ) : (
-                        link.label
-                      )
-                    }
-                    sx={{ textAlign: 'left' }}
-                  />
-                </ListItem>
-              </Tooltip>
-            );
-          }
 
           if (link.disabled) {
             return (
@@ -230,26 +197,6 @@ export default function Navbar() {
             >
               {navLinks.map((link) => {
                 if (link.hidden) return null;
-
-                if (link.label === 'VIP Fotos') {
-                  return (
-                    <Tooltip
-                      key={link.label}
-                      title="Disponível apenas no dia do casamento para os convidados postarem fotos e compartilharem vídeos entre si."
-                    >
-                      <Typography
-                        sx={{
-                          color: theme.palette.text.disabled,
-                          textDecoration: 'none',
-                          fontSize: '0.875rem',
-                          cursor: 'not-allowed',
-                        }}
-                      >
-                        {link.label}
-                      </Typography>
-                    </Tooltip>
-                  );
-                }
 
                 if (link.disabled) {
                   return (

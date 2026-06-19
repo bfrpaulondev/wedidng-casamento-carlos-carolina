@@ -11,7 +11,7 @@ import Home from './pages/Home';
 import Rsvp from './pages/Rsvp';
 import Gifts from './pages/Gifts';
 import Honeymoon from './pages/ConvidateTips';
-import Vip from './pages/Vip';
+import Vip from './pages/VipPhotos';
 import Ceremony from './pages/Ceremony';
 
 function AppContent() {
