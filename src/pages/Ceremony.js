@@ -39,10 +39,14 @@ const VENUE_ADDRESS = 'R. Francisco Assunção Pinho, 2950-091 Palmela';
 const VENUE_FULL_ADDRESS = 'Quinta Nevada 3, R. Francisco Assunção Pinho, 2950-091 Palmela';
 const VENUE_LAT = 38.5686;
 const VENUE_LNG = -8.9027;
+// Links de navegação para os 3 principais apps de mapas
 const GOOGLE_MAPS_DIR = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
   VENUE_FULL_ADDRESS,
 )}`;
-const GOOGLE_MAPS_PLACE = `https://www.google.com/maps/search/?api=1&query=${VENUE_LAT},${VENUE_LNG}`;
+const APPLE_MAPS_DIR = `https://maps.apple.com/?daddr=${VENUE_LAT},${VENUE_LNG}&q=${encodeURIComponent(
+  VENUE_NAME,
+)}`;
+const WAZE_DIR = `https://www.waze.com/ul?ll=${VENUE_LAT}%2C${VENUE_LNG}&navigate=yes&zoom=17`;
 
 const GALLERY = [
   { src: img1, alt: 'Vista geral dos jardins da Quinta Nevada 3 em Palmela' },
@@ -252,13 +256,12 @@ export default function Ceremony() {
                           transition: 'all .25s ease',
                         }}
                       >
-                        Obter direções
+                        Google Maps
                       </Button>
                       <Button
                         variant="outlined"
                         size={isMobile ? 'medium' : 'large'}
-                        startIcon={<PlaceIcon />}
-                        href={GOOGLE_MAPS_PLACE}
+                        href={APPLE_MAPS_DIR}
                         target="_blank"
                         rel="noopener noreferrer"
                         sx={{
@@ -276,7 +279,30 @@ export default function Ceremony() {
                           },
                         }}
                       >
-                        Ver no mapa
+                        Apple Maps
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        size={isMobile ? 'medium' : 'large'}
+                        href={WAZE_DIR}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          borderRadius: '999px',
+                          borderColor: 'rgba(255,255,255,0.65)',
+                          color: '#fff',
+                          textTransform: 'none',
+                          fontWeight: 500,
+                          px: 3,
+                          backdropFilter: 'blur(6px)',
+                          backgroundColor: 'rgba(255,255,255,0.10)',
+                          '&:hover': {
+                            backgroundColor: 'rgba(255,255,255,0.18)',
+                            borderColor: '#fff',
+                          },
+                        }}
+                      >
+                        Waze
                       </Button>
                     </Box>
                   </motion.div>
@@ -387,31 +413,92 @@ export default function Ceremony() {
                       </Typography>
                     </Box>
 
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      disableElevation
-                      startIcon={<DirectionsIcon />}
-                      href={GOOGLE_MAPS_DIR}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Box
                       sx={{
-                        borderRadius: '999px',
-                        backgroundColor: '#fff',
-                        color: accent,
-                        textTransform: 'none',
-                        fontWeight: 600,
-                        py: 1,
-                        '&:hover': {
-                          backgroundColor: '#fdfdfd',
-                          transform: 'translateY(-1px)',
-                          boxShadow: '0 8px 20px rgba(0,0,0,0.25)',
-                        },
-                        transition: 'all .22s ease',
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr 1fr',
+                        gap: 1,
                       }}
                     >
-                      Obter direções
-                    </Button>
+                      <Button
+                        variant="contained"
+                        disableElevation
+                        href={GOOGLE_MAPS_DIR}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          borderRadius: '999px',
+                          backgroundColor: '#fff',
+                          color: accent,
+                          textTransform: 'none',
+                          fontWeight: 600,
+                          fontSize: '.82rem',
+                          py: 0.9,
+                          px: 1,
+                          minWidth: 0,
+                          '&:hover': {
+                            backgroundColor: '#fdfdfd',
+                            transform: 'translateY(-1px)',
+                            boxShadow: '0 8px 20px rgba(0,0,0,0.25)',
+                          },
+                          transition: 'all .22s ease',
+                        }}
+                      >
+                        Google
+                      </Button>
+                      <Button
+                        variant="contained"
+                        disableElevation
+                        href={APPLE_MAPS_DIR}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          borderRadius: '999px',
+                          backgroundColor: 'rgba(255,255,255,0.18)',
+                          color: '#fff',
+                          textTransform: 'none',
+                          fontWeight: 600,
+                          fontSize: '.82rem',
+                          py: 0.9,
+                          px: 1,
+                          minWidth: 0,
+                          border: '1px solid rgba(255,255,255,0.35)',
+                          '&:hover': {
+                            backgroundColor: 'rgba(255,255,255,0.28)',
+                            transform: 'translateY(-1px)',
+                          },
+                          transition: 'all .22s ease',
+                        }}
+                      >
+                        Apple
+                      </Button>
+                      <Button
+                        variant="contained"
+                        disableElevation
+                        href={WAZE_DIR}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          borderRadius: '999px',
+                          backgroundColor: 'rgba(255,255,255,0.18)',
+                          color: '#fff',
+                          textTransform: 'none',
+                          fontWeight: 600,
+                          fontSize: '.82rem',
+                          py: 0.9,
+                          px: 1,
+                          minWidth: 0,
+                          border: '1px solid rgba(255,255,255,0.35)',
+                          '&:hover': {
+                            backgroundColor: 'rgba(255,255,255,0.28)',
+                            transform: 'translateY(-1px)',
+                          },
+                          transition: 'all .22s ease',
+                        }}
+                      >
+                        Waze
+                      </Button>
+                    </Box>
                   </Box>
                 </MotionBox>
 
@@ -718,13 +805,12 @@ export default function Ceremony() {
                         transition: 'all .25s ease',
                       }}
                     >
-                      Obter direções
+                      Google Maps
                     </Button>
                     <Button
                       variant="outlined"
                       size="large"
-                      startIcon={<PlaceIcon />}
-                      href={GOOGLE_MAPS_PLACE}
+                      href={APPLE_MAPS_DIR}
                       target="_blank"
                       rel="noopener noreferrer"
                       sx={{
@@ -742,7 +828,30 @@ export default function Ceremony() {
                         },
                       }}
                     >
-                      Ver no Google Maps
+                      Apple Maps
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      size="large"
+                      href={WAZE_DIR}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{
+                        borderRadius: '999px',
+                        borderColor: 'rgba(255,255,255,0.65)',
+                        color: '#fff',
+                        textTransform: 'none',
+                        fontWeight: 500,
+                        px: 4,
+                        backdropFilter: 'blur(6px)',
+                        backgroundColor: 'rgba(255,255,255,0.10)',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255,255,255,0.18)',
+                          borderColor: '#fff',
+                        },
+                      }}
+                    >
+                      Waze
                     </Button>
                   </Box>
                 </Box>
