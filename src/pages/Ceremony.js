@@ -34,19 +34,19 @@ import img7 from '../assets/images/quinta-nevada/QN7.jpg';
 const MotionBox = motion(Box);
 
 // Endereço e links do local
-const VENUE_NAME = 'Quinta Nevada 3';
 const VENUE_ADDRESS = 'R. Francisco Assunção Pinho, 2950-091 Palmela';
 const VENUE_FULL_ADDRESS = 'Quinta Nevada 3, R. Francisco Assunção Pinho, 2950-091 Palmela';
-const VENUE_LAT = 38.5686;
-const VENUE_LNG = -8.9027;
-// Links de navegação para os 3 principais apps de mapas
+// Links de navegação para os 3 principais apps de mapas — todos usam o
+// endereço textual completo (mesma string que funciona no Google Maps)
 const GOOGLE_MAPS_DIR = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
   VENUE_FULL_ADDRESS,
 )}`;
-const APPLE_MAPS_DIR = `https://maps.apple.com/?daddr=${VENUE_LAT},${VENUE_LNG}&q=${encodeURIComponent(
-  VENUE_NAME,
+const APPLE_MAPS_DIR = `https://maps.apple.com/?daddr=${encodeURIComponent(
+  VENUE_FULL_ADDRESS,
 )}`;
-const WAZE_DIR = `https://www.waze.com/ul?ll=${VENUE_LAT}%2C${VENUE_LNG}&navigate=yes&zoom=17`;
+const WAZE_DIR = `https://waze.com/ul?q=${encodeURIComponent(
+  VENUE_FULL_ADDRESS,
+)}&navigate=yes`;
 
 const GALLERY = [
   { src: img1, alt: 'Vista geral dos jardins da Quinta Nevada 3 em Palmela' },
@@ -309,278 +309,87 @@ export default function Ceremony() {
                 </Box>
               </MotionBox>
 
-              {/* CARTÃO ENDEREÇO + DESTAQUES (grid 2 colunas em desktop) */}
-              <Box
+              {/* DESTAQUES DO LOCAL */}
+              <MotionBox
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
                 sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-                  gap: { xs: 3, md: 4 },
+                  borderRadius: '1.5rem',
+                  backgroundColor: '#ffffffE6',
+                  boxShadow: '0 12px 30px rgba(15,23,42,0.14)',
+                  p: { xs: 2.5, md: 3 },
                   mb: { xs: 4, md: 6 },
+                  mx: 'auto',
+                  maxWidth: 640,
                 }}
               >
-                {/* Cartão de endereço (estilo "cartão digital") */}
-                <MotionBox
-                  initial={{ opacity: 0, x: -25 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                <Typography
+                  variant="subtitle1"
                   sx={{
-                    borderRadius: '1.5rem',
-                    background: `linear-gradient(135deg, ${accent}, ${salmon})`,
-                    color: '#fff',
-                    p: { xs: 2.5, md: 3 },
-                    boxShadow: '0 16px 38px rgba(15,23,42,0.30)',
-                    position: 'relative',
-                    overflow: 'hidden',
+                    fontFamily: 'Playfair Display, serif',
+                    fontWeight: 600,
+                    mb: 2,
+                    color: theme.palette.text.primary,
                   }}
                 >
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      inset: 0,
-                      opacity: 0.22,
-                      backgroundImage:
-                        'radial-gradient(circle at 10% 0, #ffffff, transparent 60%)',
-                      pointerEvents: 'none',
-                    }}
-                  />
-                  <Box sx={{ position: 'relative', zIndex: 1 }}>
-                    <Typography
-                      sx={{
-                        fontSize: '.74rem',
-                        letterSpacing: '.18em',
-                        textTransform: 'uppercase',
-                        opacity: 0.9,
-                      }}
-                    >
-                      Onde encontrar-nos
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        mt: 1,
-                        mb: 2,
-                        fontFamily: 'Playfair Display, serif',
-                        fontWeight: 600,
-                        fontSize: '1.25rem',
-                      }}
-                    >
-                      {VENUE_NAME}
-                    </Typography>
-
-                    <Box sx={{ mb: 1.5 }}>
-                      <Typography
-                        sx={{
-                          fontSize: '.7rem',
-                          textTransform: 'uppercase',
-                          letterSpacing: '.16em',
-                          opacity: 0.85,
-                          mb: 0.4,
-                        }}
-                      >
-                        Morada
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: '.95rem',
-                          lineHeight: 1.5,
-                          fontWeight: 500,
-                        }}
-                      >
-                        {VENUE_ADDRESS}
-                      </Typography>
-                    </Box>
-
-                    <Box sx={{ mb: 2.5 }}>
-                      <Typography
-                        sx={{
-                          fontSize: '.7rem',
-                          textTransform: 'uppercase',
-                          letterSpacing: '.16em',
-                          opacity: 0.85,
-                          mb: 0.4,
-                        }}
-                      >
-                        Coordenadas
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontFamily: 'monospace',
-                          fontSize: '.85rem',
-                        }}
-                      >
-                        {VENUE_LAT}, {VENUE_LNG}
-                      </Typography>
-                    </Box>
-
+                  Porque escolhemos este lugar
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {HIGHLIGHTS.map((h, i) => (
                     <Box
+                      key={i}
                       sx={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr 1fr',
-                        gap: 1,
+                        display: 'flex',
+                        gap: 1.5,
+                        alignItems: 'flex-start',
                       }}
                     >
-                      <Button
-                        variant="contained"
-                        disableElevation
-                        href={GOOGLE_MAPS_DIR}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          borderRadius: '999px',
-                          backgroundColor: '#fff',
-                          color: accent,
-                          textTransform: 'none',
-                          fontWeight: 600,
-                          fontSize: '.82rem',
-                          py: 0.9,
-                          px: 1,
-                          minWidth: 0,
-                          '&:hover': {
-                            backgroundColor: '#fdfdfd',
-                            transform: 'translateY(-1px)',
-                            boxShadow: '0 8px 20px rgba(0,0,0,0.25)',
-                          },
-                          transition: 'all .22s ease',
-                        }}
-                      >
-                        Google
-                      </Button>
-                      <Button
-                        variant="contained"
-                        disableElevation
-                        href={APPLE_MAPS_DIR}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          borderRadius: '999px',
-                          backgroundColor: 'rgba(255,255,255,0.18)',
-                          color: '#fff',
-                          textTransform: 'none',
-                          fontWeight: 600,
-                          fontSize: '.82rem',
-                          py: 0.9,
-                          px: 1,
-                          minWidth: 0,
-                          border: '1px solid rgba(255,255,255,0.35)',
-                          '&:hover': {
-                            backgroundColor: 'rgba(255,255,255,0.28)',
-                            transform: 'translateY(-1px)',
-                          },
-                          transition: 'all .22s ease',
-                        }}
-                      >
-                        Apple
-                      </Button>
-                      <Button
-                        variant="contained"
-                        disableElevation
-                        href={WAZE_DIR}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          borderRadius: '999px',
-                          backgroundColor: 'rgba(255,255,255,0.18)',
-                          color: '#fff',
-                          textTransform: 'none',
-                          fontWeight: 600,
-                          fontSize: '.82rem',
-                          py: 0.9,
-                          px: 1,
-                          minWidth: 0,
-                          border: '1px solid rgba(255,255,255,0.35)',
-                          '&:hover': {
-                            backgroundColor: 'rgba(255,255,255,0.28)',
-                            transform: 'translateY(-1px)',
-                          },
-                          transition: 'all .22s ease',
-                        }}
-                      >
-                        Waze
-                      </Button>
-                    </Box>
-                  </Box>
-                </MotionBox>
-
-                {/* Destaques do local */}
-                <MotionBox
-                  initial={{ opacity: 0, y: 25 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
-                  sx={{
-                    borderRadius: '1.5rem',
-                    backgroundColor: '#ffffffE6',
-                    boxShadow: '0 12px 30px rgba(15,23,42,0.14)',
-                    p: { xs: 2.5, md: 3 },
-                  }}
-                >
-                  <Typography
-                    variant="subtitle1"
-                    sx={{
-                      fontFamily: 'Playfair Display, serif',
-                      fontWeight: 600,
-                      mb: 2,
-                      color: theme.palette.text.primary,
-                    }}
-                  >
-                    Porque escolhemos este lugar
-                  </Typography>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    {HIGHLIGHTS.map((h, i) => (
                       <Box
-                        key={i}
                         sx={{
+                          flexShrink: 0,
+                          width: 28,
+                          height: 28,
+                          borderRadius: '999px',
+                          background: `linear-gradient(135deg, ${blue}, ${salmon})`,
+                          color: '#fff',
                           display: 'flex',
-                          gap: 1.5,
-                          alignItems: 'flex-start',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '.8rem',
+                          fontWeight: 700,
+                          mt: 0.2,
                         }}
                       >
-                        <Box
+                        {i + 1}
+                      </Box>
+                      <Box>
+                        <Typography
                           sx={{
-                            flexShrink: 0,
-                            width: 28,
-                            height: 28,
-                            borderRadius: '999px',
-                            background: `linear-gradient(135deg, ${blue}, ${salmon})`,
-                            color: '#fff',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '.8rem',
-                            fontWeight: 700,
-                            mt: 0.2,
+                            fontWeight: 600,
+                            fontSize: '.95rem',
+                            color: theme.palette.text.primary,
+                            mb: 0.3,
                           }}
                         >
-                          {i + 1}
-                        </Box>
-                        <Box>
-                          <Typography
-                            sx={{
-                              fontWeight: 600,
-                              fontSize: '.95rem',
-                              color: theme.palette.text.primary,
-                              mb: 0.3,
-                            }}
-                          >
-                            {h.title}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            sx={{
-                              color: theme.palette.text.secondary,
-                              fontSize: '.85rem',
-                              lineHeight: 1.6,
-                            }}
-                          >
-                            {h.text}
-                          </Typography>
-                        </Box>
+                          {h.title}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: theme.palette.text.secondary,
+                            fontSize: '.85rem',
+                            lineHeight: 1.6,
+                          }}
+                        >
+                          {h.text}
+                        </Typography>
                       </Box>
-                    ))}
-                  </Box>
-                </MotionBox>
-              </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </MotionBox>
 
               {/* GALERIA DE FOTOS */}
               <MotionBox
