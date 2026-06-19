@@ -42,7 +42,7 @@ const VENUE_FULL_ADDRESS = 'Quinta Nevada 3, R. Francisco Assunção Pinho, 2950
 const GOOGLE_MAPS_DIR = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
   VENUE_FULL_ADDRESS,
 )}`;
-const APPLE_MAPS_DIR = 'https://maps.apple.com/p/VCDMTnLRhWaDiY';
+const APPLE_MAPS_DIR = 'https://maps.apple.com/place?address=Rua%20Francisco%20Assun%C3%A7%C3%A3o%20Pinho%0A2950-091%20Palmela%0APortugal&coordinate=38.594910,-8.820323&name=Quinta%20Nevada&place-id=IF73989BB9CBA13CE&map=explore';
 const WAZE_DIR = 'https://waze.com/ul/heycex64yb';
 
 const GALLERY = [
